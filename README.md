@@ -1,1 +1,0 @@
-# OpenStackClient_Auto-Scaling
