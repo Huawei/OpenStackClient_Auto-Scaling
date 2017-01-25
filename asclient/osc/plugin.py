@@ -20,13 +20,13 @@ from asclient.common.parser import BaseParser
 LOGGER = logging.getLogger(__name__)
 
 # client-manage[API_NAME]
-API_NAME = 'antiddos'
+API_NAME = 'autoscaling'
 # Fixed Name
 DEFAULT_API_VERSION = '1'
 # default.json->vbs_api_version
-API_VERSION_OPTION = 'os_antiddos_api_version'
+API_VERSION_OPTION = 'os_autoscaling_api_version'
 API_VERSIONS = {
-    '1': 'asclient.v1.client.Client',
+    '1': 'asclient.v1.as_client.Client',
 }
 
 
@@ -34,18 +34,18 @@ def make_client(instance):
     """Returns an orchestration service client"""
 
     api_version = instance._api_version[API_NAME]
-    antiddos_client = utils.get_client_class(API_NAME, api_version, API_VERSIONS)
+    as_client_clazz = utils.get_client_class(API_NAME, api_version, API_VERSIONS)
 
     kwargs = {
         'region_name': instance.region_name,
         'interface': instance.interface
     }
-    endpoint = instance._cli_options.config.get('antiddos_endpoint_override', None)
+    endpoint = instance._cli_options.config.get('autoscaling_endpoint_override', None)
 
-    LOGGER.debug('Instantiating antiddos client: %s', antiddos_client)
-    LOGGER.debug('Instantiating antiddos client with kwargs: %s', kwargs)
-    LOGGER.debug('Instantiating antiddos client with endpoint: %s', endpoint)
-    client = antiddos_client(instance.session, endpoint, **kwargs)
+    LOGGER.debug('Instantiating auto-scaling client: %s', as_client_clazz)
+    LOGGER.debug('Instantiating auto-scaling client with kwargs: %s', kwargs)
+    LOGGER.debug('Instantiating auto-scaling client with endpoint: %s', endpoint)
+    client = as_client_clazz(instance.session, endpoint, **kwargs)
     return client
 
 

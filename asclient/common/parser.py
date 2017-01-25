@@ -63,7 +63,7 @@ class BaseParser(object):
     @staticmethod
     def add_sortdir_option(parser):
         parser.add_argument(
-            "--sort_dir",
+            "--sort-dir",
             choices=['desc', 'asc'],
             default='desc',
             help=_("Sort desc|asc")

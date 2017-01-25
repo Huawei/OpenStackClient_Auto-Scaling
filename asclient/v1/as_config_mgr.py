@@ -14,3 +14,12 @@
 #   under the License.
 #
 
+from asclient.common import manager
+from asclient.v1 import resource
+
+
+class ConfigManager(manager.Manager):
+    """Auto Scaling Config Manager"""
+
+    resource_class = resource.AutoScalingGroup
+

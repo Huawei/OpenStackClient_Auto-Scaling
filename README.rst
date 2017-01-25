@@ -136,6 +136,786 @@ Here's an example of listing antiddos status using Python library with keystone 
 
     >>> from keystoneauth1 import session
     >>> from keystoneauth1 import client
+    >>> from asclient.v1 import as_client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import as_client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = as_client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = as_client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import as_client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import as_client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = as_client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = as_client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = as_client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from asclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
+    >>> from antiddosclient.v1 import client
+
+    >>> # Use Keystone API v3 for authentication as example
+    >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
+    ...                             username=u'admin_user',
+    ...                             user_domain_name=u'Default',
+    ...                             password=u'password',
+    ...                             project_name=u'demo',
+    ...                             project_domain_name=u'Default')
+
+    >>> # Next create a Keystone session using the auth plugin we just created
+    >>> session = session.Session(auth=auth)
+
+    >>> # Now we use the session to create a AntiDDos client
+    >>> antiddos = as_client.Client(session=session)
+
+    >>> # Then we can access all antiddos API
+    >>> # Let's try list antiddos status API
+    >>> antiddos_client.antiddos.list()
+    [<AntiDDos floating_ip_address=160.44.1 ....>, ....]
+
+
+
+
+    >>> from keystoneauth1 import session
+    >>> from keystoneauth1 import client
     >>> from asclient.v1 import client
 
     >>> # Use Keystone API v3 for authentication as example
