@@ -15,20 +15,21 @@
 import logging
 
 from asclient.common import httpclient
-from asclient.v1 import desktop_mgr
-from asclient.v1 import desktop_user_mgr
+from asclient.v1 import config_mgr
+from asclient.v1 import group_mgr
+from asclient.v1 import instance_mgr
+from asclient.v1 import log_mgr
 from asclient.v1 import policy_mgr
-from asclient.v1 import product_mgr
-from asclient.v1 import workspace_mgr
+from asclient.v1 import quota_mgr
 
 LOGGER = logging.getLogger(__name__)
 
 
 class Client(object):
-    """Client for the HuaWei Workspace v1 API."""
+    """Client for the HuaWei AutoScaling v1 API."""
 
     # service name registered in open-stack
-    service_name = 'workspace'
+    service_name = 'auto_scaling'
 
     def __init__(self, session=None, endpoint=None, **kwargs):
         """Initialize a new client for the VBS v2 API.
@@ -45,21 +46,22 @@ class Client(object):
         # http_log_debug = utils.get_effective_log_level() <= logging.DEBUG
         default_options = {
             'service_name': self.service_name,
-            'client_name': 'Workspace Client',
+            'client_name': 'Auto Scaling Client',
             'client_version': 'v1',
             'logger': LOGGER,
         }
         kwargs.update(default_options)
 
         if endpoint:
-            endpoint += '/v1.0/%(project_id)s'
+            endpoint += '/autoscaling-api/v1/%(project_id)s'
         self.client = httpclient.OpenStackHttpClient(
             session, endpoint, **kwargs
         )
 
-        # initial workspace sub-modules
-        self.desktops = desktop_mgr.DesktopManager(self.client)
-        self.workspaces = workspace_mgr.WorkspaceManager(self.client)
+        # initial auto scaling sub-modules
+        self.groups = group_mgr.GroupManager(self.client)
+        self.configs = config_mgr.ConfigManager(self.client)
+        self.instances = instance_mgr.InstanceManager(self.client)
         self.policies = policy_mgr.PolicyManager(self.client)
-        self.products = product_mgr.ProductManager(self.client)
-        self.desktop_users = desktop_user_mgr.DesktopUserManager(self.client)
+        self.logs = log_mgr.LogManager(self.client)
+        self.quota = quota_mgr.QuotaManager(self.client)

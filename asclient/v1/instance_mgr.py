@@ -14,20 +14,12 @@
 #   under the License.
 #
 
-from asclient.common import display
-from asclient.common import resource
+from asclient.common import manager
+from asclient.v1 import resource
 
 
-class AutoScalingGroup(resource.Resource, display.Display):
-    """AutoScaling group resource instance."""
+class InstanceManager(manager.Manager):
+    """Auto Scaling Instance Manager"""
 
-    list_column_names = [
-        "id",
-        "name",
-        "status"
-    ]
+    resource_class = resource.AutoScalingGroup
 
-    column_mapping = {
-        "name": "scaling_group_name",
-        "status": "scaling_group_status",
-    }

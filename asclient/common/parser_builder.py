@@ -17,7 +17,8 @@ import os
 from asclient.common.i18n import _
 
 
-class BaseParser(object):
+class Base(object):
+
     @staticmethod
     def register_service_option(parser, service_type):
         service_env = service_type.upper().replace('-', '_')

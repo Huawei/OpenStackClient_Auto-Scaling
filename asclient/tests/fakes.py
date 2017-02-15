@@ -21,11 +21,7 @@ from asclient.common import display
 from asclient.common import manager
 from asclient.common import resource as r
 from asclient.common import utils
-from asclient.v1 import desktop_mgr
-from asclient.v1 import desktop_user_mgr
-from asclient.v1 import policy_mgr
-from asclient.v1 import product_mgr
-from asclient.v1 import workspace_mgr
+
 
 # fake request id
 FAKE_REQUEST_ID = 'req-0594c66b-6973-405c-ae2c-43fcfc00f2e3'
@@ -123,8 +119,3 @@ class FakeWorkspaceV1Client(object):
 
     def __init__(self, **kwargs):
         self.client = mock.Mock()
-        self.desktops = desktop_mgr.DesktopManager(self.client)
-        self.workspaces = workspace_mgr.WorkspaceManager(self.client)
-        self.policies = policy_mgr.PolicyManager(self.client)
-        self.products = product_mgr.ProductManager(self.client)
-        self.desktop_users = desktop_user_mgr.DesktopUserManager(self.client)
