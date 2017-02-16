@@ -34,7 +34,7 @@ def remove_empty_from_dict(original):
     :return: a new dict which removes keys with empty values
     """
     return dict((k, v) for k, v in original.iteritems()
-                if v is not None and v != '')
+                if v is not None and v != '' and v != [])
 
 
 def str_range(start, end):

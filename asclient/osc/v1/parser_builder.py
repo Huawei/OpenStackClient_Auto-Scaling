@@ -13,7 +13,9 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
+from asclient.common import parsetypes
 from asclient.common.i18n import _
+from osc_lib.cli import parseractions
 
 
 class Group(object):
@@ -163,92 +165,121 @@ class Group(object):
 
 
 class Config(object):
+
     @staticmethod
-    def add_name_arg(parser, required=True):
+    def add_config_arg(parser):
+        parser.add_argument(
+            'config',
+            metavar="<config>",
+            help=_("Configuration to display (ID or name)"),
+        )
+
+    @staticmethod
+    def add_name_arg(parser):
+        parser.add_argument(
+            'name',
+            metavar='<config-name>',
+            help=_("Name of the AS configuration to be created"),
+        )
+
+    @staticmethod
+    def add_name_option(parser, help_, required=True):
         parser.add_argument(
             '--name',
             required=required,
             metavar='<config-name>',
-            help=_("Auto-Scaling configuration name")
+            help=help_,
         )
 
     @staticmethod
-    def add_instance_arg(parser, required=False):
+    def add_instance_option(parser, required=False):
         parser.add_argument(
-            '--instance',
+            '--instance-id',
             required=required,
             metavar='<instance-id>',
-            help=_("cloud server instance id")
+            help=_("template server instance id (Either instance-id or "
+                   "flavor + image + disk is required)")
         )
 
     @staticmethod
-    def add_flavor_arg(parser, required=False):
+    def add_flavor_option(parser, required=False):
         parser.add_argument(
             '--flavor',
             required=required,
             metavar='<flavor>',
-            help=_("Create with this flavor (name or ID)")
+            help=_("Flavor to assign to configuration (ID or name)")
         )
 
     @staticmethod
-    def add_image_arg(parser, required=False):
+    def add_image_option(parser, help_, required=False):
         parser.add_argument(
             '--image',
             required=required,
             metavar='<image>',
-            help=_("Create from this image (name or ID)")
+            help=help_,
         )
 
     @staticmethod
-    def add_root_volume_arg(parser, required=True):
-        group = parser.add_argument_group('Root disk volume')
-        group.add_argument(
-            '--root-volume-type',
+    def add_root_volume_option(parser, required=False):
+        parser.add_argument(
+            "--root-volume",
+            metavar="<volume-type:volume-size(GB)>",
             required=required,
-            metavar='<volume-type>',
-            choices=['SSD', 'SATA', 'SAS'],
-            help=_("system disk volume type [SSD|SATA|SAS]")
-        )
-        group.add_argument(
-            '--root-volume-size',
-            required=required,
-            metavar='<size>',
-            type=int,
-            help=_("system disk volume size in GB")
+            type=parsetypes.volume_type,
+            help=_("Root Volume, volume type [SSD|SATA|SAS], "
+                   "volume size should between [40~32768]"
+                   "(example: SSD:80)"),
         )
 
     @staticmethod
-    def add_data_volume_arg(parser, required=False):
-        group = parser.add_argument_group('Data disk volume')
-        group.add_argument(
-            '--data-volume-type',
-            required=required,
-            metavar='<volume-type>',
-            choices=['SSD', 'SATA', 'SAS'],
-            help=_("data disk volume type [SSD|SATA|SAS]")
-        )
-        group.add_argument(
-            '--data-volume-size',
-            required=required,
-            metavar='<size>',
-            type=int,
-            help=_("data disk volume size in GB")
+    def add_data_volume_option(parser):
+        parser.add_argument(
+            "--data-volume",
+            metavar="<volume-type:volume-size(GB)>",
+            required=False,
+            default=[],
+            type=parsetypes.volume_type,
+            dest="data_volumes",
+            action='append',
+            help=_("Data Volume, volume type [SSD|SATA|SAS], "
+                   "volume size should between [10~32768]"
+                   "(example: SSD:80, "
+                   "Repeat option to set multiple data volumes.)"),
         )
 
     @staticmethod
-    def add_key_name_arg(parser, required=False):
+    def add_authentication_option(parser):
         group = parser.add_mutually_exclusive_group()
         group.add_argument(
             '--key-name',
-            required=required,
             metavar='<key-name>',
-            help=_("SSH key name (Could not used for Window Server),"
-                   " Required if admin-pass is missing")
+            help=_("SSH key name, Not support for Window Server "
+                   "(Either key-name or admin-pass is required)")
         )
         group.add_argument(
             '--admin-pass',
-            required=required,
             metavar='<admin-pass>',
-            help=_("SSH key name (Could not used for Window Server),"
-                   " Required if admin-pass is missing")
+            help=_("SSH key name "
+                   "(Either key-name or admin-pass is required)")
+        )
+
+    @staticmethod
+    def add_file_option(parser):
+        parser.add_argument(
+            '--file',
+            metavar='<dest-filename=source-filename>',
+            action='append',
+            default=[],
+            help=_('File to inject into instance (repeat option to '
+                   'set multiple files, max file number is 5)'),
+        )
+
+    @staticmethod
+    def add_metadata_option(parser):
+        parser.add_argument(
+            '--metadata',
+            metavar='<key=value>',
+            action=parseractions.KeyValueAction,
+            help=_('Set a metadata on this server '
+                   '(repeat option to set multiple values)'),
         )

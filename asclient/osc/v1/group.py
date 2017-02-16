@@ -46,16 +46,16 @@ class CreateAutoScalingGroup(command.ShowOne):
         return columns, (g.get_display_data(columns) for g in groups)
 
 
-class ListAutoScalingGroup(command.Lister):
-    _description = _("List Auto-Scaling group")
+class ListGroup(command.Lister):
+    _description = _("List Auto Scaling groups")
 
     def get_parser(self, prog_name):
-        parser = super(ListAutoScalingGroup, self).get_parser(prog_name)
-        pb.Group.add_group_name_arg(parser, required=True)
+        parser = super(ListGroup, self).get_parser(prog_name)
+        pb.Group.add_group_name_arg(parser, required=False)
         return parser
 
     def take_action(self, args):
-        group_mgr = self.app.client_manager.autoscaling.group_mgr
+        group_mgr = self.app.client_manager.auto_scaling.groups
         groups = group_mgr.list()
         columns = resource.AutoScalingGroup.list_column_names
         return columns, (g.get_display_data(columns) for g in groups)
