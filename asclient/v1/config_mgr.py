@@ -89,7 +89,7 @@ class ConfigManager(manager.Manager):
         json = {
             "scaling_configuration_id": config_ids
         }
-        return self._ceate("/scaling_configuration", json=json, raw=True)
+        return self._create("/scaling_configuration", json=json, raw=True)
 
     def create(self, name, instance_id=None, flavor_id=None, image_id=None,
                disk=None, key_name=None, admin_pwd=None, files=None,
