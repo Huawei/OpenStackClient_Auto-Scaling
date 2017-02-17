@@ -46,6 +46,10 @@ Configuration Commands
 
 #. config delete(删除弹性伸缩配置)::
 
+    $ openstack as config delete as-config-name-1 as-config-id-2
+    done
+
+
 Group Commands
 ==================
 

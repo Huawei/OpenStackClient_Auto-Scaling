@@ -158,7 +158,7 @@ class DeleteAutoScalingConfig(command.Command):
 
     def take_action(self, args):
         mgr = self.app.client_manager.auto_scaling.configs
-        config_ids = [mgr.find(id_or_name=config_id)
+        config_ids = [mgr.find(id_or_name=config_id).id
                       for config_id in args.config]
         mgr.delete(config_ids)
         return "done"
