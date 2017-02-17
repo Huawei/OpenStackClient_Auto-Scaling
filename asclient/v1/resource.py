@@ -22,19 +22,64 @@ from asclient.common import resource
 class AutoScalingGroup(resource.Resource, display.Display):
     """AutoScaling group resource instance."""
 
+    formatter = {
+        "Security Groups": formatter.format_list_of_dicts,
+        "Notifications": formatter.format_list,
+        "Networks": formatter.format_list_of_dicts,
+    }
+
+
+
+    show_column_names = [
+        "ID",
+        "Name",
+        "VPC id",
+        "Networks",
+        "Security Groups",
+        "Instance(Current/desire/min/max)",
+        "Scaling Configuration Id",
+        "Scaling Configuration Name",
+        "Cool down time",
+        "LB listener id",
+        "Health periodic audit method",
+        "Health periodic audit time",
+        "Instance Terminate Policy",
+        "Scaling",
+        "Delete Public IP",
+        "Notifications",
+        "Create Time",
+        "Status",
+    ]
+
     list_column_names = [
         "ID",
         "Name",
-        "Instance Number(Current/desire/min/max)",
+        "Instance(Current/desire/min/max)",
+        "Config Id",
         "Status"
     ]
 
     column_2_property = {
-        "ID": "scaling_group_id",
-        "Name": "scaling_group_id",
-        "Instance Number(Current/desire/min/max)": "instance_number",
-        "Status": "scaling_group_status",
+        "Instance(Current/desire/min/max)": "instance_number",
+        "Delete Public IP": "delete_publicip",
+        "Scaling": "is_scaling",
     }
+
+    @property
+    def id(self):
+        return self.scaling_group_id
+
+    @property
+    def name(self):
+        return self.scaling_group_name
+
+    @property
+    def status(self):
+        return self.scaling_group_status
+
+    @property
+    def config_id(self):
+        return self.scaling_configuration_id
 
     @property
     def instance_number(self):
@@ -115,6 +160,6 @@ class AutoScalingConfig(resource.Resource, display.Display):
     def image(self):
         return self.instance_config["imageRef"]
 
-    # @property
-    # def user_data(self):
-    #     return self.instance_config["user_data"]
+        # @property
+        # def user_data(self):
+        #     return self.instance_config["user_data"]

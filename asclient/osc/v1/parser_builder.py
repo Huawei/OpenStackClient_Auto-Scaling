@@ -20,21 +20,6 @@ from osc_lib.cli import parseractions
 
 class Group(object):
     {
-        "scaling_group_name": "GroupNameTest",
-        "scaling_configuration_id": "47683a91-93ee-462a-a7d7-484c006f4440",
-        "desire_instance_number": 0,
-        "min_instance_number": 0,
-        "max_instance_number": 0,
-        "cool_down_time": 200,
-        "health_periodic_audit_method": "NOVA_AUDIT",
-        "health_periodic_audit_time": "5",
-        "instance_terminate_policy": "OLD_CONFIG_OLD_INSTANCE",
-        "vpc_id": "a8327883-6b07-4497-9c61-68d03ee193a",
-        "networks": [
-            {
-                "id": "3cd35bca-5a10-416f-8994-f79169559870"
-            }
-        ],
         "notifications": [
             "EMAIL"
         ],
@@ -46,95 +31,136 @@ class Group(object):
     }
 
     @staticmethod
-    def add_group_name_arg(parser, required=True):
+    def add_group_name_arg(parser):
         parser.add_argument(
-            '--name',
-            required=required,
+            'name',
             metavar='<group-name>',
-            help=_("Auto-Scaling group name")
+            help=_("New Auto-Scaling group name")
         )
 
     @staticmethod
-    def add_config_id_arg(parser, required=True):
+    def add_network_opt(parser, required=True):
+        parser.add_argument(
+            '--network',
+            metavar='<network>',
+            required=required,
+            help=_("Network(VPC) to be assigned for new created instance"
+                   "(ID or name)")
+        )
+
+    @staticmethod
+    def add_subnet_opt(parser, required=True):
+        parser.add_argument(
+            '--subnet',
+            metavar='<subnet>',
+            default=[],
+            action='append',
+            required=required,
+            dest="subnets",
+            help=_("Subnet to be assigned for new created instance "
+                   "(ID or name, Repeat option to set multiple subnet, "
+                   "max repeat times is 5)")
+        )
+
+    @staticmethod
+    def add_security_group_opt(parser):
+        parser.add_argument(
+            "--security-group",
+            metavar="<security-group>",
+            default=[],
+            required=True,
+            dest="security_groups",
+            action='append',
+            help=_('Security group to be assigned for new created instance '
+                   '(ID or name, Repeat option to set multiple security '
+                   'groups)'),
+        )
+
+    @staticmethod
+    def add_config_id_opt(parser, required=False):
         parser.add_argument(
             '--config',
             required=required,
-            metavar='<scaling-config>',
-            help=_("Auto-Scaling config id or name")
+            metavar='<config>',
+            help=_("Auto-Scaling config to be used for creating instance "
+                   "(ID or name)")
         )
 
     @staticmethod
-    def add_desired_ins_number_arg(parser, required=True):
+    def add_desired_instance_opt(parser, required=False):
         parser.add_argument(
-            '--desire-instance-number',
+            '--desire-instance',
             required=required,
-            metavar='<count>',
+            metavar='<number>',
             type=int,
             help=_("Auto-Scaling group desired instance number")
         )
 
     @staticmethod
-    def add_max_ins_number_arg(parser, required=True):
+    def add_max_instance_opt(parser, required=False):
         parser.add_argument(
-            '--max-instance-number',
+            '--max-instance',
             required=required,
-            metavar='<count>',
+            metavar='<number>',
             type=int,
             help=_("Auto-Scaling group max instance number")
         )
 
     @staticmethod
-    def add_min_ins_number_arg(parser, required=True):
+    def add_min_instance_opt(parser, required=False):
         parser.add_argument(
-            '--min-instance-number',
+            '--min-instance',
             required=required,
-            metavar='<count>',
+            metavar='<number>',
             type=int,
             help=_("Auto-Scaling group min instance number")
         )
 
     @staticmethod
-    def add_cool_down_time_arg(parser, required=True):
+    def add_cool_down_opt(parser, required=False):
         parser.add_argument(
-            '--cool-down-time',
+            '--cool-down',
             required=required,
-            metavar='<cool-down-time>',
+            metavar='<seconds>',
             type=int,
-            help=_("Auto-Scaling group cool down time")
+            help=_("Auto-Scaling group cool down time (second)")
         )
 
     @staticmethod
-    def add_lb_listener_arg(parser, required=True):
+    def add_lb_listener_opt(parser, required=False):
         parser.add_argument(
             '--lb-listener',
-            metavar='load-balance-listener-id',
+            metavar='LB-listener-id',
             required=required,
             help=_("load balance listener id")
         )
 
     @staticmethod
-    def add_health_periodic_audit_method_arg(parser, required=True):
+    def add_health_periodic_audit_method_arg(parser, required=False):
         parser.add_argument(
             '--health-periodic-audit-method',
             required=required,
             metavar='<audit-method>',
             choices=['ELB_AUDIT', 'NOVA_AUDIT'],
-            help=_("Auto-Scaling group health periodic audit method")
+            help=_("Auto-Scaling group health periodic audit method, "
+                   "NOVA_AUDIT by default, if lb-listen-id present, "
+                   "ELB_AUDIT will be used.")
         )
 
     @staticmethod
-    def add_health_periodic_audit_time_arg(parser, required=True):
+    def add_health_periodic_audit_time_arg(parser, required=False):
         parser.add_argument(
             '--health-periodic-audit-time',
             required=required,
-            metavar='<audit-time>',
-            choices=['5', '15', '60', '180'],
+            metavar='<minute>',
+            choices=[5, 15, 60, 180],
             type=int,
-            help=_("Auto-Scaling group health periodic audit time(min)")
+            help=_("Auto-Scaling group health periodic audit time (min), "
+                   "5 minutes by default.")
         )
 
     @staticmethod
-    def add_instance_terminate_policy_arg(parser, required=True):
+    def add_instance_terminate_policy_opt(parser, required=False):
         parser.add_argument(
             '--instance-terminate-policy',
             required=required,
@@ -147,21 +173,50 @@ class Group(object):
             help=_("Auto-Scaling group instance terminate policy")
         )
 
-        # "instance_terminate_policy": "OLD_CONFIG_OLD_INSTANCE",
-        # "vpc_id": "a8327883-6b07-4497-9c61-68d03ee193a",
-        # "networks": [
-        #                 {
-        #                     "id": "3cd35bca-5a10-416f-8994-f79169559870"
-        #                 }
-        #             ],
-        # "notifications": [
-        #                      "EMAIL"
-        #                  ],
-        # "security_groups": [
-        #     {
-        #         "id": "23b7b999-0a30-4b48-ae8f-ee201a88a6ab"
-        #     }
-        # ]
+    @staticmethod
+    def add_del_public_ip_opt(parser, required=False):
+        parser.add_argument(
+            '--delete-public-ip',
+            required=required,
+            action="store_true",
+            default=False,
+            help=_("Delete public-ip when terminate instance "
+                   "(False by default)")
+        )
+
+    ################
+    # List Groups #
+    ###############
+
+    @staticmethod
+    def add_group_name_option(parser, required=False):
+        parser.add_argument(
+            '--name',
+            required=required,
+            metavar='<group-name>',
+            help=_("Search by group name")
+        )
+
+    @staticmethod
+    def add_group_status_option(parser, required=False):
+        parser.add_argument(
+            '--status',
+            required=required,
+            choices=["INSERVICE", "PAUSED", "ERROR"],
+            help=_("Search by group status")
+        )
+
+    ################
+    # Show Group  #
+    ###############
+
+    @staticmethod
+    def add_group_id_arg(parser):
+        parser.add_argument(
+            'group',
+            metavar='<group>',
+            help=_("Group to display (ID or name)")
+        )
 
 
 class Config(object):

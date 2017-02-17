@@ -59,9 +59,9 @@ class Client(object):
         )
 
         # initial auto scaling sub-modules
-        self.groups = group_mgr.GroupManager(self.client)
         self.configs = config_mgr.ConfigManager(self.client)
-        self.instances = instance_mgr.InstanceManager(self.client)
+        self.groups = group_mgr.GroupManager(self.client)
         self.policies = policy_mgr.PolicyManager(self.client)
+        self.instances = instance_mgr.InstanceManager(self.client)
         self.logs = log_mgr.LogManager(self.client)
         self.quota = quota_mgr.QuotaManager(self.client)

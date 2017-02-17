@@ -48,7 +48,7 @@ class ConfigManager(manager.Manager):
         elif matched_number == 1:
             return results[0]
 
-        message = _("No Configuration with ID or name of "
+        message = _("No Auto Scaling Configuration with ID or name of "
                     "'%s' exists.") % id_or_name
         raise exceptions.NotFound(message)
 

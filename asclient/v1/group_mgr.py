@@ -14,9 +14,12 @@
 #   under the License.
 #
 
+from asclient.common import exceptions as execs
 from asclient.common import manager
 from asclient.common import utils
+from asclient.common.i18n import _
 from asclient.v1 import resource
+from keystoneauth1 import exceptions
 
 
 class GroupManager(manager.Manager):
@@ -24,54 +27,119 @@ class GroupManager(manager.Manager):
 
     resource_class = resource.AutoScalingGroup
 
-    # def create(self, name, as_config_id, desire_instance_number
-    #          start_number=None, limit=None):
-    #     {
-    #         "scaling_group_name": "GroupNameTest",
-    #         "scaling_configuration_id": "47683a91-93ee-462a-a7d7-484c006f4440",
-    #         "desire_instance_number": 0,
-    #         "min_instance_number": 0,
-    #         "max_instance_number": 0,
-    #         "cool_down_time": 200,
-    #         "health_periodic_audit_method": "NOVA_AUDIT",
-    #         "health_periodic_audit_time": "5",
-    #         "instance_terminate_policy": "OLD_CONFIG_OLD_INSTANCE",
-    #         "vpc_id": "a8327883-6b07-4497-9c61-68d03ee193a",
-    #         "networks": [
-    #             {
-    #                 "id": "3cd35bca-5a10-416f-8994-f79169559870"
-    #             }
-    #         ],
-    #         "notifications": [
-    #             "EMAIL"
-    #         ],
-    #         "security_groups": [
-    #             {
-    #                 "id": "23b7b999-0a30-4b48-ae8f-ee201a88a6ab"
-    #             }
-    #         ]
-    #     }
-    #
-    #     params = utils.remove_empty_from_dict({
-    #         "scaling_group_name": name,
-    #         "scaling_group_status": status,
-    #         "scaling_configuration_id": as_config_id,
-    #         "start_number": start_number,
-    #         "limit": limit,
-    #     })
-    #     return self._list("/scaling_group",
-    #                       params=params,
-    #                       key='scaling_groups')
+    def create(self, name, network_id, subnets, security_groups,
+               as_config_id=None, desire_instance_number=None,
+               max_instance_number=None, min_instance_number=None,
+               cool_down_time=None, lb_listener_id=None,
+               health_periodic_audit_time=None,
+               health_periodic_audit_method=None,
+               instance_terminate_policy=None, delete_public_ip=None,
+               notifications=None):
+        """create new auto scaling group"""
+        json = utils.remove_empty_from_dict({
+            "scaling_group_name": name,
+            "vpc_id": network_id,
+            "networks": [dict(id=subnet) for subnet in subnets],
+            "security_groups": [dict(id=sg) for sg in security_groups],
+            "scaling_configuration_id": as_config_id,
+            "lb_listener_id": lb_listener_id,
+            "desire_instance_number": desire_instance_number,
+            "min_instance_number": min_instance_number,
+            "max_instance_number": max_instance_number,
+            "cool_down_time": cool_down_time,
+            "health_periodic_audit_method": health_periodic_audit_method,
+            "health_periodic_audit_time": health_periodic_audit_time,
+            "instance_terminate_policy": instance_terminate_policy,
+            "notifications": notifications,
+            "delete_publicip": delete_public_ip,
+        })
+        return self._create("/scaling_group", json=json)
+
+    def find(self, id_or_name):
+        """find auto scaling group by id or name
+
+        exactly match will be performed
+        :param id_or_name:
+        :rtype: resource.AutoScalingGroup
+        :return: AutoScalingGroup with id or name matches id_or_name
+        """
+        try:
+            return self.get(id_or_name)
+        except exceptions.ClientException as e:
+            pass
+
+        results = self.list(name=id_or_name)
+        matched_number = len(results)
+        if matched_number > 1:
+            raise execs.NotUniqueMatch
+        elif matched_number == 1:
+            return results[0]
+
+        message = _("No Auto Scaling Group with ID or name of "
+                    "'%s' exists.") % id_or_name
+        raise exceptions.NotFound(message)
+
 
     def list(self, name=None, status=None, as_config_id=None,
-             start_number=None, limit=None):
+             limit=None, offset=None):
+        """list auto scaling groups
+
+        :param name: group name
+        :param status: one of ["INSERVICE", "PAUSED", "ERROR"]
+        :param as_config_id: auto scaling configuration id
+        :param limit:
+        :param offset:
+        :rtype: list of resource.AutoScalingGroup
+        :return:
+        """
         params = utils.remove_empty_from_dict({
             "scaling_group_name": name,
             "scaling_group_status": status,
             "scaling_configuration_id": as_config_id,
-            "start_number": start_number,
+            "start_number": offset,
             "limit": limit,
         })
         return self._list("/scaling_group",
                           params=params,
                           key='scaling_groups')
+
+
+    def get(self, group_id):
+        """get auto scaling group
+
+        :param group_id:
+        :return:
+        :rtype: resource.AutoScalingGroup
+        """
+        return self._get("/scaling_group/" + group_id, key="scaling_group")
+
+
+    def resume(self, group_id):
+        """resume auto scaling group
+
+        :param group_id:
+        :return:
+        """
+        return self._create("/scaling_group/%s/action" % group_id,
+                            json=dict(action="resume"),
+                            raw=True)
+
+
+    def pause(self, group_id):
+        """pause auto scaling group
+
+        :param group_id:
+        :return:
+        """
+        return self._create("/scaling_group/%s/action" % group_id,
+                            json=dict(action="pause"),
+                            raw=True)
+
+
+    def delete(self, group_id):
+        """delete auto scaling group
+
+        :param group_id:
+        :return:
+        """
+        return self._delete("/scaling_group/" + group_id, raw=True)
