@@ -70,16 +70,18 @@ class AutoScalingConfig(resource.Resource, display.Display):
         "Create Time",
     ]
 
-    column_2_property = {
-        "ID": "scaling_configuration_id",
-        "Name": "scaling_configuration_name",
-        "Create Time": "create_time",
-    }
-
     formatter = {
         "Disk": formatter.format_list_of_dicts,
         "Metadata": formatter.format_dict,
     }
+
+    @property
+    def id(self):
+        return self.scaling_configuration_id
+
+    @property
+    def name(self):
+        return self.scaling_configuration_name
 
     @property
     def flavor(self):
