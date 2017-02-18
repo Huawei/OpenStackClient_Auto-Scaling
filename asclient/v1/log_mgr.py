@@ -35,9 +35,12 @@ class LogManager(manager.Manager):
         :param offset:
         :return:
         """
+        str_fmt = "%Y-%m-%dT%H:%M:%SZ"
+        start_time_str = start_time.strftime(str_fmt) if start_time else None
+        end_time_str = end_time.strftime(str_fmt) if end_time else None
         params = utils.remove_empty_from_dict({
-            "start_time": start_time,
-            "end_time": end_time,
+            "start_time": start_time_str,
+            "end_time": end_time_str,
             "limit": limit,
             "offset": offset,
         })

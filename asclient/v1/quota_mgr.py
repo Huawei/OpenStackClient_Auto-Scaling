@@ -21,5 +21,13 @@ from asclient.v1 import resource
 class QuotaManager(manager.Manager):
     """Auto Scaling Quota Manager"""
 
-    resource_class = resource.AutoScalingGroup
+    resource_class = resource.AutoScalingQuota
 
+    def list(self, as_group_id=None):
+        """list quotas
+
+        :param as_group_id: if present, show quotas of the group
+        :return:
+        """
+        url = '/quotas' if as_group_id is None else '/quotas/' + as_group_id
+        return self._list(url, key='quotas.resources')

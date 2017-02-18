@@ -217,3 +217,14 @@ class AutoScalingLog(resource.Resource, display.Display):
         desc = json.loads(self.description)
         return '\n\n'.join(formatter.format_dict(i)
                            for i in desc["reason"])
+
+
+class AutoScalingQuota(resource.Resource, display.Display):
+    """AutoScaling Quota resource instance"""
+
+    list_column_names = [
+        "type",
+        "quota",
+        "used",
+        "max",
+    ]

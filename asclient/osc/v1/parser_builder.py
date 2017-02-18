@@ -384,7 +384,7 @@ class Log(object):
         parser.add_argument(
             '--start-time',
             metavar="<yyyy-MM-dd HH:mm>",
-            type=parsetypes.date_type('%Y-%m-%d %H:%M'),
+            type=parsetypes.date_type('%Y-%m-%dT%H:%M:%S'),
             help=_("list group activity logs after this time"),
         )
 
@@ -393,6 +393,6 @@ class Log(object):
         parser.add_argument(
             '--end-time',
             metavar="<yyyy-MM-dd HH:mm>",
-            type=parsetypes.date_type('%Y-%m-%d %H:%M'),
+            type=parsetypes.date_type('%Y-%m-%dT%H:%M:%S'),
             help=_("list group activity logs after this time"),
         )
