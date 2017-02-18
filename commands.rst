@@ -112,3 +112,26 @@ Group Commands
     done
 
 
+Instance Commands
+=================
+
+1. instance list(查询弹性伸缩组中的实例列表)::
+
+    $ openstack as instance list --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
+    +-----------------------------+------------------------+---------------+----------------+------------------+---------------+
+    | Instance ID                 | Instance Name          | AS Group Name | AS Config Name | Lifecycle Status | Health Status |
+    +-----------------------------+------------------------+---------------+----------------+------------------+---------------+
+    | abe6a889-d689-4528-aa0d-    | as-config-TEO_MMUCM9KR | as-group-teo  | as-config-TEO  | INSERVICE        | NORMAL        |
+    | e48f5274c83d                |                        |               |                |                  |               |
+    +-----------------------------+------------------------+---------------+----------------+------------------+---------------+
+
+#. instance remove(批量移出实例)::
+
+    $ openstack as instance remove --instance=as-config-TEO_MMUCM9KR --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385 --delete
+    done
+
+
+#. instance add(批量添加实例)::
+
+    $ openstack as instance add --instance=as-config-TEO_MMUCM9KR --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
+    done

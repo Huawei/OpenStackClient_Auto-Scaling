@@ -13,10 +13,11 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
-from osc_lib import utils as formatter
+import json
 
 from asclient.common import display
 from asclient.common import resource
+from osc_lib import utils as formatter
 
 
 class AutoScalingGroup(resource.Resource, display.Display):
@@ -27,8 +28,6 @@ class AutoScalingGroup(resource.Resource, display.Display):
         "Notifications": formatter.format_list,
         "Networks": formatter.format_list_of_dicts,
     }
-
-
 
     show_column_names = [
         "ID",
@@ -163,3 +162,58 @@ class AutoScalingConfig(resource.Resource, display.Display):
         # @property
         # def user_data(self):
         #     return self.instance_config["user_data"]
+
+
+class AutoScalingInstance(resource.Resource, display.Display):
+    """AutoScaling instance resource instance"""
+
+    list_column_names = [
+        "Instance ID",
+        "Instance Name",
+        "AS Group Name",
+        "AS Config Name",
+        "Lifecycle Status",
+        "Health Status",
+    ]
+
+    column_2_property = {
+        "AS Group Name": "scaling_group_name",
+        "AS Config Name": "scaling_configuration_name",
+        "Lifecycle Status": "life_cycle_state",
+    }
+
+    @property
+    def id(self):
+        return self.instance_id
+
+    @property
+    def name(self):
+        return self.instance_name
+
+
+class AutoScalingLog(resource.Resource, display.Display):
+    """AutoScaling activity log resource instance"""
+
+    list_column_names = [
+        "Start Time",
+        "End Time",
+        "Current/Desire/Scaling",
+        "Scaling Reason",
+        "Status",
+    ]
+
+    column_2_property = {
+        "Current/Desire/Scaling": "instance_number",
+    }
+
+    @property
+    def instance_number(self):
+        return "%d/%d/%d" % (self.instance_value,
+                             self.desire_value,
+                             self.scaling_value,)
+
+    @property
+    def scaling_reason(self):
+        desc = json.loads(self.description)
+        return '\n\n'.join(formatter.format_dict(i)
+                           for i in desc["reason"])

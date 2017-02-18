@@ -19,17 +19,6 @@ from osc_lib.cli import parseractions
 
 
 class Group(object):
-    {
-        "notifications": [
-            "EMAIL"
-        ],
-        "security_groups": [
-            {
-                "id": "23b7b999-0a30-4b48-ae8f-ee201a88a6ab"
-            }
-        ]
-    }
-
     @staticmethod
     def add_group_name_arg(parser):
         parser.add_argument(
@@ -220,7 +209,6 @@ class Group(object):
 
 
 class Config(object):
-
     @staticmethod
     def add_config_arg(parser):
         parser.add_argument(
@@ -337,4 +325,74 @@ class Config(object):
             action=parseractions.KeyValueAction,
             help=_('Set a metadata on this server '
                    '(repeat option to set multiple values)'),
+        )
+
+
+class Instance(object):
+
+    @staticmethod
+    def add_group_option(parser):
+        parser.add_argument(
+            '--group',
+            metavar="<group>",
+            required=True,
+            help=_("Group which the instances belong to (ID or name)"),
+        )
+
+    @staticmethod
+    def add_lifecycle_status_option(parser):
+        parser.add_argument(
+            '--lifecycle-status',
+            choices=["INSERVICE", "PENDING", "REMOVING", ],
+            help=_("Search by instance lifecycle status"),
+        )
+
+    @staticmethod
+    def add_health_status_option(parser):
+        parser.add_argument(
+            '--health-status',
+            choices=["INITIALIZING", "NORMAL", "ERROR", ],
+            help=_("Search by instance health status"),
+        )
+
+    @staticmethod
+    def add_instances_option(parser, op):
+        parser.add_argument(
+            '--instance',
+            metavar="<instance>",
+            required=True,
+            default=[],
+            dest='instances',
+            action="append",
+            help=_("Instance to be %s (ID or name), repeat option to set "
+                   "multiple instances" % op),
+        )
+
+    @staticmethod
+    def add_delete_instance_option(parser):
+        parser.add_argument(
+            '--delete',
+            action="store_true",
+            help=_("Delete Instance after remove (Not delete by default)"),
+        )
+
+
+class Log(object):
+
+    @staticmethod
+    def add_start_time_option(parser):
+        parser.add_argument(
+            '--start-time',
+            metavar="<yyyy-MM-dd HH:mm>",
+            type=parsetypes.date_type('%Y-%m-%d %H:%M'),
+            help=_("list group activity logs after this time"),
+        )
+
+    @staticmethod
+    def add_end_time_option(parser):
+        parser.add_argument(
+            '--end-time',
+            metavar="<yyyy-MM-dd HH:mm>",
+            type=parsetypes.date_type('%Y-%m-%d %H:%M'),
+            help=_("list group activity logs after this time"),
         )

@@ -15,11 +15,31 @@
 #
 
 from asclient.common import manager
+from asclient.common import utils
 from asclient.v1 import resource
 
 
 class LogManager(manager.Manager):
     """Auto Scaling Log Manager"""
 
-    resource_class = resource.AutoScalingGroup
+    resource_class = resource.AutoScalingLog
 
+    def list(self, as_group_id, start_time=None, end_time=None, limit=None,
+             offset=None):
+        """list auto scaling group activity logs
+
+        :param as_group_id:
+        :param start_time: datetime
+        :param end_time: datetime
+        :param limit:
+        :param offset:
+        :return:
+        """
+        params = utils.remove_empty_from_dict({
+            "start_time": start_time,
+            "end_time": end_time,
+            "limit": limit,
+            "offset": offset,
+        })
+        url = "/scaling_activity_log/" + as_group_id
+        return self._list(url, params=params, key="scaling_activity_log")
