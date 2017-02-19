@@ -34,17 +34,17 @@ class CreateAutoScalingConfig(command.Command):
 
         pb.Config.add_name_arg(parser)
 
-        pb.Config.add_instance_option(parser, required=False)
+        pb.Config.add_instance_opt(parser, required=False)
         pb.Config.add_flavor_option(parser, required=False)
         help_image = _("Image to assign to configuration (ID or name)")
-        pb.Config.add_image_option(parser, help_image, required=False)
+        pb.Config.add_image_opt(parser, help_image, required=False)
 
-        pb.Config.add_root_volume_option(parser)
-        pb.Config.add_data_volume_option(parser)
-        pb.Config.add_authentication_option(parser)
+        pb.Config.add_root_volume_opt(parser)
+        pb.Config.add_data_volume_opt(parser)
+        pb.Config.add_authentication_opt(parser)
 
-        pb.Config.add_file_option(parser)
-        pb.Config.add_metadata_option(parser)
+        pb.Config.add_file_opt(parser)
+        pb.Config.add_metadata_opt(parser)
 
         return parser
 
@@ -103,12 +103,12 @@ class ListAutoScalingConfig(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListAutoScalingConfig, self).get_parser(prog_name)
         help_name = _("list auto scaling instance configs with name")
-        pb.Config.add_name_option(parser, help_name, required=False)
+        pb.Config.add_name_opt(parser, help_name, required=False)
         help_image = _("list auto scaling instance configs with image"
                        "(ID or Name)")
-        pb.Config.add_image_option(parser, help_image, required=False)
-        bpb.Base.add_offset_option(parser)
-        bpb.Base.add_limit_option(parser)
+        pb.Config.add_image_opt(parser, help_image, required=False)
+        bpb.Base.add_offset_opt(parser)
+        bpb.Base.add_limit_opt(parser)
         return parser
 
     def take_action(self, args):

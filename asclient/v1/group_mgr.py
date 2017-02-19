@@ -13,13 +13,13 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
+from keystoneauth1 import exceptions
 
 from asclient.common import exceptions as execs
 from asclient.common import manager
 from asclient.common import utils
 from asclient.common.i18n import _
 from asclient.v1 import resource
-from keystoneauth1 import exceptions
 
 
 class GroupManager(manager.Manager):
@@ -78,7 +78,6 @@ class GroupManager(manager.Manager):
         message = _("No Auto Scaling Group with ID or name of "
                     "'%s' exists.") % id_or_name
         raise exceptions.NotFound(message)
-
 
     def list(self, name=None, status=None, as_config_id=None,
              limit=None, offset=None):

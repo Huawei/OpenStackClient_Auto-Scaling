@@ -228,3 +228,75 @@ class AutoScalingQuota(resource.Resource, display.Display):
         "used",
         "max",
     ]
+
+
+class AutoScalingPolicy(resource.Resource, display.Display):
+    """AutoScaling policy resource instance"""
+
+    list_column_names = [
+        # "Group Id",
+        "Policy ID",
+        "Policy Name",
+        "Policy Type",
+        "CoolDown(s)",
+        "Trigger Action",
+        "Status",
+    ]
+
+    #
+    #     "scheduled_policy": {
+    #         "launch_time": "2015-07-24T01:21Z"
+    #     },
+    #     "scaling_policy_action": {
+    #         "operation": "REMOVE",
+    #         "instance_number": 1
+    #     },
+    #     "create_time": "2015-07-24T01:09:30Z"
+    # }
+
+    show_column_names = [
+        "Group Id",
+        "Policy ID",
+        "Policy Name",
+        "Policy Type",
+        "Alarm Id",
+        "CoolDown(s)",
+        "Scheduled Policy",
+        "Trigger Action",
+        "Create Time",
+        "Status",
+    ]
+
+    column_2_property = {
+        "Policy ID": "scaling_policy_id",
+        "Policy Name": "scaling_policy_name",
+        "Group Id": "scaling_group_id",
+        "Policy Type": "scaling_policy_type",
+        "CoolDown(s)": "cool_down_time",
+    }
+
+    formatter = {
+        "Scheduled Policy": formatter.format_dict,
+    }
+
+    @property
+    def id(self):
+        return self.scaling_policy_id
+
+    @property
+    def name(self):
+        return self.scaling_policy_name
+
+    @property
+    def status(self):
+        return self.policy_status
+
+    @property
+    def trigger_action(self):
+        if self.scaling_policy_action:
+            operation = self.scaling_policy_action["operation"]
+            instance_number = self.scaling_policy_action["instance_number"]
+            return "%s %s" % (operation, instance_number)
+        return None
+
+

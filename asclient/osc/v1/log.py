@@ -25,19 +25,18 @@ class ListAutoScalingLog(command.Lister):
 
     def get_parser(self, prog_name):
         parser = super(ListAutoScalingLog, self).get_parser(prog_name)
-        pb.Instance.add_group_option(parser)
+        pb.Instance.add_group_opt(parser)
         pb.Log.add_start_time_option(parser)
-        pb.Log.add_end_time_option(parser)
-        bpb.Base.add_limit_option(parser)
-        bpb.Base.add_offset_option(parser)
+        pb.Log.add_end_time_opt(parser)
+        bpb.Base.add_limit_opt(parser)
+        bpb.Base.add_offset_opt(parser)
         return parser
 
     def take_action(self, args):
-        mgr = self.app.client_manager.auto_scaling.logs
         as_groups_mgr = self.app.client_manager.auto_scaling.groups
-
         group_id = as_groups_mgr.find(args.group).id
 
+        mgr = self.app.client_manager.auto_scaling.logs
         logs = mgr.list(group_id, start_time=args.start_time,
                         end_time=args.end_time, limit=args.limit,
                         offset=args.offset)

@@ -44,7 +44,7 @@ class Base(object):
                 service_type=service_type)))
 
     @staticmethod
-    def add_limit_option(parser):
+    def add_limit_opt(parser):
         parser.add_argument(
             "--limit",
             metavar="<limit>",
@@ -53,7 +53,7 @@ class Base(object):
         )
 
     @staticmethod
-    def add_offset_option(parser):
+    def add_offset_opt(parser):
         parser.add_argument(
             "--offset",
             metavar="<offset>",

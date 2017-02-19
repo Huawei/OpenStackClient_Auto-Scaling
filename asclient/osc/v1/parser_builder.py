@@ -19,6 +19,7 @@ from osc_lib.cli import parseractions
 
 
 class Group(object):
+
     @staticmethod
     def add_group_name_arg(parser):
         parser.add_argument(
@@ -178,7 +179,7 @@ class Group(object):
     ###############
 
     @staticmethod
-    def add_group_name_option(parser, required=False):
+    def add_group_name_opt(parser, required=False):
         parser.add_argument(
             '--name',
             required=required,
@@ -187,7 +188,7 @@ class Group(object):
         )
 
     @staticmethod
-    def add_group_status_option(parser, required=False):
+    def add_group_status_opt(parser, required=False):
         parser.add_argument(
             '--status',
             required=required,
@@ -226,7 +227,7 @@ class Config(object):
         )
 
     @staticmethod
-    def add_name_option(parser, help_, required=True):
+    def add_name_opt(parser, help_, required=True):
         parser.add_argument(
             '--name',
             required=required,
@@ -235,7 +236,7 @@ class Config(object):
         )
 
     @staticmethod
-    def add_instance_option(parser, required=False):
+    def add_instance_opt(parser, required=False):
         parser.add_argument(
             '--instance-id',
             required=required,
@@ -254,7 +255,7 @@ class Config(object):
         )
 
     @staticmethod
-    def add_image_option(parser, help_, required=False):
+    def add_image_opt(parser, help_, required=False):
         parser.add_argument(
             '--image',
             required=required,
@@ -263,7 +264,7 @@ class Config(object):
         )
 
     @staticmethod
-    def add_root_volume_option(parser, required=False):
+    def add_root_volume_opt(parser, required=False):
         parser.add_argument(
             "--root-volume",
             metavar="<volume-type:volume-size(GB)>",
@@ -275,7 +276,7 @@ class Config(object):
         )
 
     @staticmethod
-    def add_data_volume_option(parser):
+    def add_data_volume_opt(parser):
         parser.add_argument(
             "--data-volume",
             metavar="<volume-type:volume-size(GB)>",
@@ -291,7 +292,7 @@ class Config(object):
         )
 
     @staticmethod
-    def add_authentication_option(parser):
+    def add_authentication_opt(parser):
         group = parser.add_mutually_exclusive_group()
         group.add_argument(
             '--key-name',
@@ -307,7 +308,7 @@ class Config(object):
         )
 
     @staticmethod
-    def add_file_option(parser):
+    def add_file_opt(parser):
         parser.add_argument(
             '--file',
             metavar='<dest-filename=source-filename>',
@@ -318,7 +319,7 @@ class Config(object):
         )
 
     @staticmethod
-    def add_metadata_option(parser):
+    def add_metadata_opt(parser):
         parser.add_argument(
             '--metadata',
             metavar='<key=value>',
@@ -331,7 +332,7 @@ class Config(object):
 class Instance(object):
 
     @staticmethod
-    def add_group_option(parser):
+    def add_group_opt(parser):
         parser.add_argument(
             '--group',
             metavar="<group>",
@@ -340,7 +341,7 @@ class Instance(object):
         )
 
     @staticmethod
-    def add_lifecycle_status_option(parser):
+    def add_lifecycle_status_opt(parser):
         parser.add_argument(
             '--lifecycle-status',
             choices=["INSERVICE", "PENDING", "REMOVING", ],
@@ -348,7 +349,7 @@ class Instance(object):
         )
 
     @staticmethod
-    def add_health_status_option(parser):
+    def add_health_status_opt(parser):
         parser.add_argument(
             '--health-status',
             choices=["INITIALIZING", "NORMAL", "ERROR", ],
@@ -356,7 +357,7 @@ class Instance(object):
         )
 
     @staticmethod
-    def add_instances_option(parser, op):
+    def add_instances_opt(parser, op):
         parser.add_argument(
             '--instance',
             metavar="<instance>",
@@ -369,7 +370,7 @@ class Instance(object):
         )
 
     @staticmethod
-    def add_delete_instance_option(parser):
+    def add_delete_instance_opt(parser):
         parser.add_argument(
             '--delete',
             action="store_true",
@@ -383,16 +384,148 @@ class Log(object):
     def add_start_time_option(parser):
         parser.add_argument(
             '--start-time',
-            metavar="<yyyy-MM-dd HH:mm>",
+            metavar="<yyyy-MM-ddTHH:mm:ss>",
             type=parsetypes.date_type('%Y-%m-%dT%H:%M:%S'),
             help=_("list group activity logs after this time"),
         )
 
     @staticmethod
-    def add_end_time_option(parser):
+    def add_end_time_opt(parser):
         parser.add_argument(
             '--end-time',
-            metavar="<yyyy-MM-dd HH:mm>",
+            metavar="<yyyy-MM-ddTHH:mm:ss>",
             type=parsetypes.date_type('%Y-%m-%dT%H:%M:%S'),
             help=_("list group activity logs after this time"),
+        )
+
+
+class Policy(object):
+
+    @staticmethod
+    def add_policy_id_arg(parser, op):
+        parser.add_argument(
+            'policy',
+            metavar='<policy>',
+            help=_("Policy to %s (ID)" % op)
+        )
+
+    @staticmethod
+    def add_policy_name_arg(parser):
+        parser.add_argument(
+            'name',
+            metavar="<policy-name>",
+            help=_("Auto-Scaling policy name"),
+        )
+
+    @staticmethod
+    def add_group_opt(parser, required=False):
+        parser.add_argument(
+            '--group',
+            metavar="<group>",
+            required=required,
+            help=_("Group (ID or name) which the policies belong to"),
+        )
+
+    @staticmethod
+    def add_policy_name_opt(parser, help_=None, required=False):
+        help_ = _(help_ if help_ else "search by policy name")
+        parser.add_argument(
+            '--name',
+            metavar="<policy-name>",
+            required=required,
+            help=help_,
+        )
+
+    @staticmethod
+    def add_policy_type_opt(parser, help_=None, required=False):
+        help_ = _(help_ if help_ else "search by policy type")
+        parser.add_argument(
+            '--type',
+            required=required,
+            choices=["ALARM", "SCHEDULED", "RECURRENCE"],
+            help=help_,
+        )
+
+    @staticmethod
+    def add_alarm_id_opt(parser, required=False):
+        parser.add_argument(
+            '--alarm-id',
+            required=required,
+            metavar="<alarm-id>",
+            help=_("Alarm Id to assign to the policy "
+                   "(Only effect when policy-type is ALARM)"),
+        )
+
+    @staticmethod
+    def add_launch_time_opt(parser, required=False):
+        parser.add_argument(
+            '--launch-time',
+            required=required,
+            metavar="<yyyy-MM-ddTHH:mm>",
+            type=parsetypes.date_type('%Y-%m-%dT%H:%M'),
+            help=_("Schedule launch time"
+                   "(Only Effect when policy-type is SCHEDULED)"),
+        )
+
+    @staticmethod
+    def add_recurrence_opt(parser, required=False):
+        parser.add_argument(
+            '--recurrence',
+            required=required,
+            metavar="<type:value>",
+            type=parsetypes.recurrence_type,
+            help=_("Recurrence type contains ['Daily', 'Weekly', 'Monthly']. "
+                   "When type is Daily, value should be HH:ss "
+                   "(example: Daily:18:00 means schedule at Everyday's 18:00); "
+                   "When type is Weekly, value should be 1-7 (example: "
+                   "Weekly:1,3 means schedule at Every Sunday,Wednesday); "
+                   "When type is Monthly, value should be 1-31 (example: "
+                   "Monthly:1,10,20 means schedule at 1,10,20 of Every Month), "
+                   "(Effect only when policy-type is RECURRENCE)"
+                   ),
+        )
+
+    @staticmethod
+    def add_start_time_opt(parser, required=False):
+        parser.add_argument(
+            '--start-time',
+            required=required,
+            metavar="<yyyy-MM-ddTHH:mm>",
+            type=parsetypes.date_type('%Y-%m-%dT%H:%M'),
+            help=_("Recurrence start UTC time "
+                   "(Effect only when policy-type is RECURRENCE)"),
+        )
+
+    @staticmethod
+    def add_end_time_opt(parser, required=False):
+        parser.add_argument(
+            '--end-time',
+            required=required,
+            metavar="<yyyy-MM-ddTHH:mm>",
+            type=parsetypes.date_type('%Y-%m-%dT%H:%M'),
+            help=_("Recurrence end UTC time "
+                   "(Effect only when policy-type is RECURRENCE)"),
+        )
+
+    @staticmethod
+    def add_action_opt(parser, required=False):
+        parser.add_argument(
+            '--action',
+            metavar="<operation:number>",
+            required=required,
+            type=parsetypes.policy_action_type,
+            help=_("Action performed when policy execute, "
+                   "operation contains ['ADD', 'REMOVE', 'SET'],"
+                   "example: ADD:1 means add 1 instance"),
+        )
+
+    @staticmethod
+    def add_cool_down_opt(parser, required=False):
+        parser.add_argument(
+            '--cool-down',
+            required=required,
+            metavar='<seconds>',
+            type=int,
+            help=_("Auto-Scaling policy schedule period (second), "
+                   "900 seconds by default")
         )

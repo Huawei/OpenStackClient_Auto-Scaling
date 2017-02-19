@@ -27,11 +27,11 @@ class ListAutoScalingInstance(command.Lister):
 
     def get_parser(self, prog_name):
         parser = super(ListAutoScalingInstance, self).get_parser(prog_name)
-        pb.Instance.add_group_option(parser)
-        pb.Instance.add_lifecycle_status_option(parser)
-        pb.Instance.add_health_status_option(parser)
-        bpb.Base.add_limit_option(parser)
-        bpb.Base.add_offset_option(parser)
+        pb.Instance.add_group_opt(parser)
+        pb.Instance.add_lifecycle_status_opt(parser)
+        pb.Instance.add_health_status_opt(parser)
+        bpb.Base.add_limit_opt(parser)
+        bpb.Base.add_offset_opt(parser)
         return parser
 
     def take_action(self, args):
@@ -53,9 +53,9 @@ class RemoveAutoScalingInstance(command.Command):
 
     def get_parser(self, prog_name):
         parser = super(RemoveAutoScalingInstance, self).get_parser(prog_name)
-        pb.Instance.add_group_option(parser)
-        pb.Instance.add_instances_option(parser, 'removed')
-        pb.Instance.add_delete_instance_option(parser)
+        pb.Instance.add_group_opt(parser)
+        pb.Instance.add_instances_opt(parser, 'removed')
+        pb.Instance.add_delete_instance_opt(parser)
         return parser
 
     def take_action(self, args):
@@ -94,9 +94,9 @@ class AddAutoScalingInstance(command.Command):
 
     def get_parser(self, prog_name):
         parser = super(AddAutoScalingInstance, self).get_parser(prog_name)
-        pb.Instance.add_group_option(parser)
-        pb.Instance.add_instances_option(parser, 'removed')
-        pb.Instance.add_delete_instance_option(parser)
+        pb.Instance.add_group_opt(parser)
+        pb.Instance.add_instances_opt(parser, 'removed')
+        pb.Instance.add_delete_instance_opt(parser)
         return parser
 
     def take_action(self, args):

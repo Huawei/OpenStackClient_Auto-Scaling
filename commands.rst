@@ -137,6 +137,84 @@ Instance Commands
     done
 
 
+
+Policy Commands
+===============
+
+1. policy create(创建弹性伸缩策略)::
+
+    $  openstack as policy create WooTest --action=ADD:1 --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
+        --type=SCHEDULED --launch-time=2017-02-19T13:40
+    Policy xxxxxxx created
+
+    $ openstack as policy create WooTest --action=ADD:1 --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
+        --type=RECURRENCE --start-time=2017-02-19T14:00 --end-time=2017-02-28T23:00
+        --recurrence=Daily:12:00 --action=SET:1
+    Policy e0eb7de0-aa5b-435c-8d4c-46867fdf087d created
+
+#. policy edit(修改弹性伸缩策略)::
+
+    $ openstack as policy edit  e0eb7de0-aa5b-435c-8d4c-46867fdf087d  --action=SET:2
+        --cool-down=60 --name=WooTest2 --type=RECURRENCE --recurrence=Weekly:1,3,5
+        --start-time=2017-02-20T00:00 --end-time=2017-03-20T00:00 --debug
+    done
+
+
+#. policy list(查询弹性伸缩策略列表)::
+
+    $ openstack as policy list --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
+    +--------------------------------------+----------------+-------------+-------------+----------------+-----------+
+    | Policy ID                            | Policy Name    | Policy Type | CoolDown(s) | Trigger Action | Status    |
+    +--------------------------------------+----------------+-------------+-------------+----------------+-----------+
+    | 67174f3d-0a7a-4c13-a890-edbe11b45242 | as-policy-rpdj | ALARM       |         900 | ADD 1          | INSERVICE |
+    | 81c5051a-cb1d-4993-b036-3d3afc6c9648 | as-policy-tfum | SCHEDULED   |         900 | ADD 4          | PAUSED    |
+    | c8e2c794-f8ef-428a-8efe-3ff1268f6804 | WooTest        | SCHEDULED   |         900 | ADD 1          | INSERVICE |
+    | 2a19d97f-8d2e-44f7-873e-c1e7c321e68f | WooTest        | SCHEDULED   |         900 | ADD 1          | INSERVICE |
+    | e0eb7de0-aa5b-435c-8d4c-46867fdf087d | WooTest        | RECURRENCE  |         900 | SET 1          | INSERVICE |
+    +--------------------------------------+----------------+-------------+-------------+----------------+-----------+
+
+
+#. policy show()::
+
+    $ openstack as policy show 81c5051a-cb1d-4993-b036-3d3afc6c9648
+    +------------------+--------------------------------------+
+    | Field            | Value                                |
+    +------------------+--------------------------------------+
+    | Group Id         | ac8acbb4-e6ce-4890-a9f2-d8712b3d7385 |
+    | Policy ID        | 81c5051a-cb1d-4993-b036-3d3afc6c9648 |
+    | Policy Name      | as-policy-tfum                       |
+    | Policy Type      | SCHEDULED                            |
+    | Alarm Id         |                                      |
+    | CoolDown(s)      | 900                                  |
+    | Scheduled Policy | launch_time='2016-12-24T13:44Z'      |
+    | Trigger Action   | ADD 4                                |
+    | Create Time      | 2016-11-30T13:44:21Z                 |
+    | Status           | INSERVICE                            |
+    +------------------+--------------------------------------+
+
+#. policy pause(停止弹性伸缩策略)::
+
+    $ openstack as policy pause 81c5051a-cb1d-4993-b036-3d3afc6c9648
+    done
+
+
+#. policy resume(启用弹性伸缩策略)::
+
+    $ openstack as policy resume 81c5051a-cb1d-4993-b036-3d3afc6c9648
+    done
+
+
+#. policy execute(执行弹性伸缩策略)::
+
+    $ openstack as policy execute 81c5051a-cb1d-4993-b036-3d3afc6c9648
+    done
+
+
+#. policy delete(删除弹性伸缩策略)::
+
+    $ openstack as policy delete 81c5051a-cb1d-4993-b036-3d3afc6c9648
+    done
+
 Log Commands
 ============
 

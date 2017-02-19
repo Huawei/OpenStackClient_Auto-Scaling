@@ -77,7 +77,7 @@ class CreateAutoScalingGroup(command.Command):
         }
         created = groups.create(args.name, network_id, subnets,
                                 security_groups, **kwargs)
-        return args
+        return "Group %s created" % created.id
 
 
 class ListAutoScalingGroup(command.Lister):
@@ -85,11 +85,11 @@ class ListAutoScalingGroup(command.Lister):
 
     def get_parser(self, prog_name):
         parser = super(ListAutoScalingGroup, self).get_parser(prog_name)
-        pb.Group.add_group_name_option(parser)
-        pb.Group.add_group_status_option(parser)
+        pb.Group.add_group_name_opt(parser)
+        pb.Group.add_group_status_opt(parser)
         pb.Group.add_config_id_opt(parser)
-        bpb.Base.add_limit_option(parser)
-        bpb.Base.add_offset_option(parser)
+        bpb.Base.add_limit_opt(parser)
+        bpb.Base.add_offset_opt(parser)
         return parser
 
     def take_action(self, args):
