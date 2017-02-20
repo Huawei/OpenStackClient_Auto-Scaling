@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -44,11 +43,12 @@ def from_http_error(exception):
             pass
         else:
             message = ''
-            if isinstance(body, dict):
-                if "error_code" in body:
-                    message += '[%s] ' % body["error_code"]
-                if "error_description" in body:
-                    message += body["error_description"]
+            if isinstance(body, dict) and isinstance(body.get("error"), dict):
+                error = body["error"]
+                if "code" in error:
+                    message += '[%s] ' % error["code"]
+                if "message" in error:
+                    message += error["message"]
 
             if message != '':
                 kwargs["message"] = message
@@ -60,6 +60,3 @@ def from_http_error(exception):
 
 class NotUniqueMatch(base.ClientException):
     message = "Could not locate unique resource"
-
-
-

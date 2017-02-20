@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -13,19 +14,20 @@
 #   under the License.
 #
 
-import oslo_i18n
+from asclient.common import manager
+from asclient.v1 import resource
 
-_translators = oslo_i18n.TranslatorFactory(domain='asclient')
 
-# The primary translation function using the well-known name "_"
-_ = _translators.primary
+class QuotaManager(manager.Manager):
+    """Auto Scaling Quota Manager"""
 
-# Translators for log levels.
-#
-# The abbreviated names are meant to reflect the usual use of a short
-# name like '_'. The "L" is for "log" and the other letter comes from
-# the level.
-_LI = _translators.log_info
-_LW = _translators.log_warning
-_LE = _translators.log_error
-_LC = _translators.log_critical
+    resource_class = resource.AutoScalingQuota
+
+    def list(self, as_group_id=None):
+        """list quotas
+
+        :param as_group_id: if present, show quotas of the group
+        :return:
+        """
+        url = '/quotas' if as_group_id is None else '/quotas/' + as_group_id
+        return self._list(url, key='quotas.resources')

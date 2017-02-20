@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -13,8 +12,8 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
-
 import mock
+
 from oslo_serialization import jsonutils
 from requests import Response
 
@@ -22,6 +21,7 @@ from asclient.common import display
 from asclient.common import manager
 from asclient.common import resource as r
 from asclient.common import utils
+
 
 # fake request id
 FAKE_REQUEST_ID = 'req-0594c66b-6973-405c-ae2c-43fcfc00f2e3'
@@ -77,7 +77,7 @@ class FakeManager(manager.Manager):
         return self._update_all(resource_url, resource, **kwargs)
 
     def create(self, resource=None):
-        return self._create(FAKE_RESOURCE_COLLECTION_URL, data=resource)
+        return self._create(FAKE_RESOURCE_COLLECTION_URL, json=resource)
 
     def delete(self, resource):
         return self._delete(FAKE_RESOURCE_ITEM_URL % utils.get_id(resource))
@@ -113,3 +113,9 @@ class FakeHTTPResponse(object):
 
     def json(self):
         return jsonutils.loads(self.content)
+
+
+class FakeWorkspaceV1Client(object):
+
+    def __init__(self, **kwargs):
+        self.client = mock.Mock()

@@ -34,19 +34,27 @@ class Manager(object):
     def __init__(self, http_client):
         """initial with open stack http client
 
-        :param antiddosclient.common.httpclient.OpenStackHttpClient http_client:
+        :param http_client: http requester with type of
+            asclient.common.httpclient.OpenStackHttpClient
         """
         self.http_client = http_client
 
+    def get_data(self, data, path=None):
+        if data and path and path != '':
+            nested = path.split('.')
+            return self.get_data(data[nested[0]], '.'.join(nested[1:]))
+        return data
+
     def _list(self, url, params={}, resource_class=None, key=None, headers={}):
-        """
+        """ common list resource function
 
         :rtype: Resource
         """
         resp, body = self.http_client.get(url, params=params, headers=headers)
-        resource_class = resource_class if resource_class else self.resource_class
+        resource_class = (resource_class if resource_class
+                          else self.resource_class)
         # get required body part
-        data = body[key] if key else body
+        data = self.get_data(body, key)
         data = data if data else []
         if all([isinstance(_resource, six.string_types)
                 for _resource in data]):
@@ -66,7 +74,7 @@ class Manager(object):
         # PATCH requests may not return a body
         if body:
             # get required body part
-            content = body[key] if key else body
+            content = self.get_data(body, key)
             if raw:
                 return self.mixin_meta(content, resp)
             else:
@@ -80,7 +88,7 @@ class Manager(object):
         # PATCH requests may not return a body
         if body:
             # get required body part
-            content = body[key] if key else body
+            content = self.get_data(body, key)
             if raw:
                 return self.mixin_meta(content, resp)
             else:
@@ -88,14 +96,14 @@ class Manager(object):
         else:
             return resource.StrWithMeta(resp.text, resp)
 
-    def _create(self, url, data=None, key=None, raw=False, headers={}):
-        if data:
-            resp, body = self.http_client.post(url, json=data, headers=headers)
+    def _create(self, url, json=None, key=None, raw=False, headers={}):
+        if json:
+            resp, body = self.http_client.post(url, json=json, headers=headers)
         else:
             resp, body = self.http_client.post(url, headers=headers)
 
         # get required body part
-        content = body[key] if key else body
+        content = self.get_data(body, key)
         if raw or not body:
             return self.mixin_meta(content, resp)
         else:
@@ -106,7 +114,7 @@ class Manager(object):
         resp, body = self.http_client.get(url, params=params, headers=headers)
         # get required body part
         if body:
-            content = body[key] if key else body
+            content = self.get_data(body, key)
             if raw:
                 return self.mixin_meta(content, resp)
             else:
@@ -135,47 +143,3 @@ class Manager(object):
             return resource.TupleWithMeta((), resp)
         else:
             return resource.DictWithMeta(item, resp)
-
-# @six.add_metaclass(abc.ABCMeta)
-# class ManagerWithFind(Manager):
-#     """Manager with additional `find()`/`findall()` methods."""
-#
-#     @abc.abstractmethod
-#     def list(self):
-#         pass
-#
-#     def find(self, **kwargs):
-#         """Find a single item with attributes matching ``**kwargs``.
-#
-#         This isn't very efficient: it loads the entire list then filters on
-#         the Python side.
-#         """
-#         matches = self.findall(**kwargs)
-#         num = len(matches)
-#
-#         if num == 0:
-#             msg = "No %s matching %s." % (self.resource_class.__name__, kwargs)
-#             raise exceptions.NotFound(msg)
-#         elif num > 1:
-#             raise exceptions.NoUniqueMatch
-#         else:
-#             return self.get(matches[0].uuid)
-#
-#     def findall(self, **kwargs):
-#         """Find all items with attributes matching ``**kwargs``.
-#
-#         This isn't very efficient: it loads the entire list then filters on
-#         the Python side.
-#         """
-#         found = []
-#         searches = kwargs.items()
-#
-#         for obj in self.list():
-#             try:
-#                 if all(getattr(obj, attr) == value
-#                        for (attr, value) in searches):
-#                     found.append(obj)
-#             except AttributeError:
-#                 continue
-#
-#         return found

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -14,10 +13,11 @@
 #   under the License.
 #
 import six
+from mock import mock
+
 from asclient.common import resource
 from asclient.tests import base
 from asclient.tests import fakes
-from mock import mock
 
 
 class SampleResource(resource.Resource):
