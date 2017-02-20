@@ -27,18 +27,18 @@ class GroupManager(manager.Manager):
 
     resource_class = resource.AutoScalingGroup
 
-    def create(self, name, network_id, subnets, security_groups,
+    def create(self, name, vpc_id, subnets, security_groups,
                as_config_id=None, desire_instance_number=None,
                max_instance_number=None, min_instance_number=None,
                cool_down_time=None, lb_listener_id=None,
                health_periodic_audit_time=None,
                health_periodic_audit_method=None,
                instance_terminate_policy=None, delete_public_ip=None,
-               notifications=None):
+               notifications=None, availability_zones=None):
         """create new auto scaling group"""
         json = utils.remove_empty_from_dict({
             "scaling_group_name": name,
-            "vpc_id": network_id,
+            "vpc_id": vpc_id,
             "networks": [dict(id=subnet) for subnet in subnets],
             "security_groups": [dict(id=sg) for sg in security_groups],
             "scaling_configuration_id": as_config_id,
@@ -52,8 +52,37 @@ class GroupManager(manager.Manager):
             "instance_terminate_policy": instance_terminate_policy,
             "notifications": notifications,
             "delete_publicip": delete_public_ip,
+            "availability_zones": availability_zones,
         })
         return self._create("/scaling_group", json=json)
+
+    def edit(self, as_group_id, name=None, subnets=None, security_groups=None,
+             as_config_id=None, desire_instance_number=None,
+             max_instance_number=None, min_instance_number=None,
+             cool_down_time=None, lb_listener_id=None,
+             health_periodic_audit_time=None,
+             health_periodic_audit_method=None,
+             instance_terminate_policy=None, delete_public_ip=None,
+             notifications=None, availability_zones=None):
+        """create new auto scaling group"""
+        json = utils.remove_empty_from_dict({
+            "scaling_group_name": name,
+            "networks": [dict(id=subnet) for subnet in subnets],
+            "security_groups": [dict(id=sg) for sg in security_groups],
+            "scaling_configuration_id": as_config_id,
+            "lb_listener_id": lb_listener_id,
+            "desire_instance_number": desire_instance_number,
+            "min_instance_number": min_instance_number,
+            "max_instance_number": max_instance_number,
+            "cool_down_time": cool_down_time,
+            "health_periodic_audit_method": health_periodic_audit_method,
+            "health_periodic_audit_time": health_periodic_audit_time,
+            "instance_terminate_policy": instance_terminate_policy,
+            "notifications": notifications,
+            "delete_publicip": delete_public_ip,
+            "availability_zones": availability_zones,
+        })
+        return self._update_all("/scaling_group/" + as_group_id, json=json)
 
     def find(self, id_or_name):
         """find auto scaling group by id or name
@@ -102,7 +131,6 @@ class GroupManager(manager.Manager):
                           params=params,
                           key='scaling_groups')
 
-
     def get(self, group_id):
         """get auto scaling group
 
@@ -111,7 +139,6 @@ class GroupManager(manager.Manager):
         :rtype: resource.AutoScalingGroup
         """
         return self._get("/scaling_group/" + group_id, key="scaling_group")
-
 
     def resume(self, group_id):
         """resume auto scaling group
@@ -123,7 +150,6 @@ class GroupManager(manager.Manager):
                             json=dict(action="resume"),
                             raw=True)
 
-
     def pause(self, group_id):
         """pause auto scaling group
 
@@ -133,7 +159,6 @@ class GroupManager(manager.Manager):
         return self._create("/scaling_group/%s/action" % group_id,
                             json=dict(action="pause"),
                             raw=True)
-
 
     def delete(self, group_id):
         """delete auto scaling group

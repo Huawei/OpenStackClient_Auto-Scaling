@@ -29,13 +29,13 @@ class Group(object):
         )
 
     @staticmethod
-    def add_network_opt(parser, required=True):
+    def add_vpc_opt(parser, required=True):
         parser.add_argument(
-            '--network',
-            metavar='<network>',
+            '--vpc',
+            metavar='<vpc>',
             required=required,
-            help=_("Network(VPC) to be assigned for new created instance"
-                   "(ID or name)")
+            help=_("VPC(Router) to assign to the instance (ID or name, "
+                   "use openstack router list to get it)")
         )
 
     @staticmethod
@@ -47,8 +47,8 @@ class Group(object):
             action='append',
             required=required,
             dest="subnets",
-            help=_("Subnet to be assigned for new created instance "
-                   "(ID or name, Repeat option to set multiple subnet, "
+            help=_("Subnet to assign to the instance (ID or name, "
+                   "Repeat option to set multiple subnet, "
                    "max repeat times is 5)")
         )
 
@@ -61,9 +61,8 @@ class Group(object):
             required=True,
             dest="security_groups",
             action='append',
-            help=_('Security group to be assigned for new created instance '
-                   '(ID or name, Repeat option to set multiple security '
-                   'groups)'),
+            help=_('Security group to assign to the instance (ID or name, '
+                   'Repeat option to set multiple security groups)'),
         )
 
     @staticmethod
@@ -72,7 +71,7 @@ class Group(object):
             '--config',
             required=required,
             metavar='<config>',
-            help=_("Auto-Scaling config to be used for creating instance "
+            help=_("Auto-Scaling config to assign to the instance "
                    "(ID or name)")
         )
 
@@ -179,12 +178,13 @@ class Group(object):
     ###############
 
     @staticmethod
-    def add_group_name_opt(parser, required=False):
+    def add_group_name_opt(parser, help_=None, required=False):
+        help_txt = _(help_ if help_ else "Search by group name")
         parser.add_argument(
             '--name',
             required=required,
             metavar='<group-name>',
-            help=_("Search by group name")
+            help=help_txt,
         )
 
     @staticmethod
