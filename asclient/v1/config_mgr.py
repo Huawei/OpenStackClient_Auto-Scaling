@@ -42,11 +42,12 @@ class ConfigManager(manager.Manager):
             pass
 
         results = self.list(name=id_or_name)
-        matched_number = len(results)
+        filtered = [result for result in results if result.name == id_or_name]
+        matched_number = len(filtered)
         if matched_number > 1:
             raise execs.NotUniqueMatch
         elif matched_number == 1:
-            return results[0]
+            return filtered[0]
 
         message = _("No Auto Scaling Configuration with ID or name of "
                     "'%s' exists.") % id_or_name

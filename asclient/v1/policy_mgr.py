@@ -17,6 +17,7 @@ from keystoneauth1 import exceptions
 
 from asclient.common import manager
 from asclient.common import utils
+from asclient.common.i18n import _
 from asclient.v1 import resource
 
 
