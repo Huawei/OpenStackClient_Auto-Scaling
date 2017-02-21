@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -12,268 +13,290 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
-import logging
-
-from osc_lib import utils as formatter
+import json
 
 from asclient.common import display
 from asclient.common import resource
+from osc_lib import utils as formatter
 
-LOG = logging.getLogger(__name__)
 
-
-class Desktop(resource.Resource, display.Display):
-    """workspace desktop resource instance"""
-
-    show_column_names = [
-        "Desktop Id",
-        "Computer Name",
-        "User Name",
-        "Product Id",
-        "Security Groups",
-        "Flavor",
-        "metadata",
-        "addresses",
-        "Root Volume",
-        "Data Volumes",
-        "Created",
-        "Login Status",
-        "Status"
-    ]
+class AutoScalingGroup(resource.Resource, display.Display):
+    """AutoScaling group resource instance."""
 
     formatter = {
-        "Security Groups": formatter.format_list,
-        "Flavor": lambda flavor: flavor['id'],
-        "metadata": formatter.format_dict,
-        "Root Volume": formatter.format_dict,
-        "Data Volumes": formatter.format_list_of_dicts,
-        "addresses": formatter.format_list_of_dicts,
+        "Security Groups": formatter.format_list_of_dicts,
+        "Notifications": formatter.format_list,
+        "Networks": formatter.format_list_of_dicts,
     }
-
-    list_column_names = [
-        "Desktop Id",
-        "Computer Name",
-        "User Name",
-        "Ip Address",
-        "Created"
-    ]
-
-    list_detail_column_names = [
-        "Desktop Id",
-        "Computer Name",
-        "User Name",
-        "Product Id",
-        "Login Status",
-        "Status"
-    ]
-
-
-class Workspace(resource.Resource, display.Display):
-    """workspace desktop user resource instance"""
 
     show_column_names = [
-        "AD Domains",
-        "VPC ID",
-        "VPC Name",
-        "Dedicated access address",
-        "Internet access address",
-        "access_mode",
-        "Subnets",
-    ]
-
-    column_2_property = {
-        "Subnets": "subnet_ids"
-    }
-
-    formatter = {
-        "AD Domains": formatter.format_dict,
-        "subnet_ids": formatter.format_list_of_dicts,
-    }
-
-
-class Product(resource.Resource, display.Display):
-    """workspace product resource instance"""
-
-    list_column_names = [
-        "Product ID",
-        "Flavor ID",
-        "Type",
-        "Descriptions"
-    ]
-
-
-def format_bool_enable(enable):
-    return "Enabled" if enable else "Disabled"
-
-
-def format_prop_enable(target):
-    return format_bool_enable(target["enable"])
-
-
-def format_hdp_enable(target):
-    return format_bool_enable(target["hdp_plus_enable"])
-
-
-class Policy(resource.Resource, display.Display):
-    """workspace policy resource instance"""
-
-    show_column_names = [
-        "USB port redirection",
-        "USB image",
-        "USB video",
-        "USB printer",
-        "USB storage",
-        "USB smart card",
-
-        "Printer redirection",
-        "sync client default printer",
-        "universal printer driver",
-        #
-        "File redirection mode",
-        "fixed drive",
-        "removable drive",
-        "cd rom drive",
-        "network drive",
-
-        "clipboard redirection",
-        #
-        "hdp plus",
-        #
-        "hdp display level",
-        "hdp bandwidth",
-        "hdp frame rate",
-        "hdp video frame rate",
-        "hdp smoothing factor",
-        "hdp lossy compression quality",
-    ]
-
-    formatter = {
-        "USB port redirection": format_prop_enable,
-        "Printer redirection": format_prop_enable,
-        "hdp plus": format_hdp_enable,
-    }
-
-    @property
-    def hdp_plus_options(self):
-        return self.hdp_plus["options"]
-
-    @property
-    def hdp_display_level(self):
-        return self.hdp_plus["display_level"]
-
-    @property
-    def hdp_bandwidth(self):
-        return self.hdp_plus_options["bandwidth"]
-
-    @property
-    def hdp_frame_rate(self):
-        return self.hdp_plus_options["frame_rate"]
-
-    @property
-    def hdp_video_frame_rate(self):
-        return self.hdp_plus_options["video_frame_rate"]
-
-    @property
-    def hdp_smoothing_factor(self):
-        return self.hdp_plus_options["smoothing_factor"]
-
-    @property
-    def hdp_lossy_compression_quality(self):
-        return self.hdp_plus_options["lossy_compression_quality"]
-
-    @property
-    def file_options(self):
-        return self.file_redirection["options"]
-
-    @property
-    def file_redirection_mode(self):
-        return self.file_redirection["redirection_mode"]
-
-    @property
-    def fixed_drive(self):
-        return format_bool_enable(self.file_options["fixed_drive_enable"])
-
-    @property
-    def removable_drive(self):
-        return format_bool_enable(self.file_options["removable_drive_enable"])
-
-    @property
-    def cd_rom_drive(self):
-        return format_bool_enable(self.file_options["cd_rom_drive_enable"])
-
-    @property
-    def network_drive(self):
-        return format_bool_enable(self.file_options["network_drive_enable"])
-
-    @property
-    def universal_printer_driver(self):
-        printer_options = self.printer_redirection["options"]
-        return printer_options["universal_printer_driver"]
-
-    @property
-    def sync_client_default_printer(self):
-        printer_options = self.printer_redirection["options"]
-        return format_bool_enable(
-            printer_options["sync_client_default_printer_enable"]
-        )
-
-    @property
-    def usb_option(self):
-        return self.usb_port_redirection["options"]
-
-    @property
-    def usb_image(self):
-        return format_bool_enable(self.usb_option["usb_image_enable"])
-
-    @property
-    def usb_video(self):
-        return format_bool_enable(self.usb_option["usb_video_enable"])
-
-    @property
-    def usb_printer(self):
-        return format_bool_enable(self.usb_option["usb_printer_enable"])
-
-    @property
-    def usb_storage(self):
-        return format_bool_enable(self.usb_option["usb_storage_enable"])
-
-    @property
-    def usb_smart_card(self):
-        return format_bool_enable(self.usb_option["usb_smart_card_enable"])
-
-
-class DesktopUser(resource.Resource, display.Display):
-    """workspace desktop user resource instance"""
-
-    list_column_names = [
+        "ID",
         "Name",
-        "Email",
-        "Domain Name",
-        "Domain Type"
+        "VPC id",
+        "Networks",
+        "Security Groups",
+        "Instance(Current/desire/min/max)",
+        "Scaling Configuration Id",
+        "Scaling Configuration Name",
+        "Cool down time",
+        "LB listener id",
+        "Health periodic audit method",
+        "Health periodic audit time",
+        "Instance Terminate Policy",
+        "Scaling",
+        "Delete Public IP",
+        "Notifications",
+        "Create Time",
+        "Status",
+    ]
+
+    list_column_names = [
+        "ID",
+        "Name",
+        "Instance(Current/desire/min/max)",
+        "Config Id",
+        "Status"
     ]
 
     column_2_property = {
-        "Name": "user_name",
-        "Email": "user_email",
+        "Instance(Current/desire/min/max)": "instance_number",
+        "Delete Public IP": "delete_publicip",
+        "Scaling": "is_scaling",
     }
 
     @property
-    def domain_name(self):
-        return self.ad_domains["domain_name"]
+    def id(self):
+        return self.scaling_group_id
 
     @property
-    def domain_type(self):
-        return self.ad_domains["domain_type"]
+    def name(self):
+        return self.scaling_group_name
+
+    @property
+    def status(self):
+        return self.scaling_group_status
+
+    @property
+    def config_id(self):
+        return self.scaling_configuration_id
+
+    @property
+    def instance_number(self):
+        numbers = (self.current_instance_number,
+                   self.desire_instance_number,
+                   self.min_instance_number,
+                   self.max_instance_number,)
+        return "%d/%d/%d/%d" % numbers
 
 
-class DesktopLoginRecords(resource.Resource, display.Display):
-    """workspace desktop login record resource instance"""
+class AutoScalingConfig(resource.Resource, display.Display):
+    """AutoScaling configuration resource instance."""
+
+    show_column_names = [
+        "ID",
+        "Name",
+        "Disk",
+        # "Instance ID",
+        # "Instance Name",
+        "Flavor",
+        "Image",
+        "Key Name",
+        "Public IP",
+        # "User Data",
+        "Metadata",
+        "Create Time",
+    ]
 
     list_column_names = [
-        "Computer Name",
-        "User Name",
-        "Terminal Name",
-        "Terminal Type",
-        "Connection start time",
-        "Connection end time",
+        "ID",
+        "Name",
+        "Image",
+        "Create Time",
     ]
+
+    formatter = {
+        "Disk": formatter.format_list_of_dicts,
+        "Metadata": formatter.format_dict,
+    }
+
+    @property
+    def id(self):
+        return self.scaling_configuration_id
+
+    @property
+    def name(self):
+        return self.scaling_configuration_name
+
+    @property
+    def flavor(self):
+        return self.instance_config["flavorRef"]
+
+    @property
+    def key_name(self):
+        return self.instance_config["key_name"]
+
+    @property
+    def metadata(self):
+        return self.instance_config["metadata"]
+
+    # @property
+    # def instance_id(self):
+    #     return self.instance_config["instance_id"]
+    #
+    # @property
+    # def instance_name(self):
+    #     return self.instance_config["instance_name"]
+
+    @property
+    def public_ip(self):
+        return self.instance_config["public_ip"]
+
+    @property
+    def disk(self):
+        return self.instance_config["disk"]
+
+    @property
+    def image(self):
+        return self.instance_config["imageRef"]
+
+        # @property
+        # def user_data(self):
+        #     return self.instance_config["user_data"]
+
+
+class AutoScalingInstance(resource.Resource, display.Display):
+    """AutoScaling instance resource instance"""
+
+    list_column_names = [
+        "Instance ID",
+        "Instance Name",
+        "AS Group Name",
+        "AS Config Name",
+        "Lifecycle Status",
+        "Health Status",
+    ]
+
+    column_2_property = {
+        "AS Group Name": "scaling_group_name",
+        "AS Config Name": "scaling_configuration_name",
+        "Lifecycle Status": "life_cycle_state",
+    }
+
+    @property
+    def id(self):
+        return self.instance_id
+
+    @property
+    def name(self):
+        return self.instance_name
+
+
+class AutoScalingLog(resource.Resource, display.Display):
+    """AutoScaling activity log resource instance"""
+
+    list_column_names = [
+        "Start Time",
+        "End Time",
+        "Current/Desire/Scaling",
+        "Scaling Reason",
+        "Status",
+    ]
+
+    column_2_property = {
+        "Current/Desire/Scaling": "instance_number",
+    }
+
+    @property
+    def instance_number(self):
+        return "%d/%d/%d" % (self.instance_value,
+                             self.desire_value,
+                             self.scaling_value,)
+
+    @property
+    def scaling_reason(self):
+        desc = json.loads(self.description)
+        return '\n\n'.join(formatter.format_dict(i)
+                           for i in desc["reason"])
+
+
+class AutoScalingQuota(resource.Resource, display.Display):
+    """AutoScaling Quota resource instance"""
+
+    list_column_names = [
+        "type",
+        "quota",
+        "used",
+        "max",
+    ]
+
+
+class AutoScalingPolicy(resource.Resource, display.Display):
+    """AutoScaling policy resource instance"""
+
+    list_column_names = [
+        # "Group Id",
+        "Policy ID",
+        "Policy Name",
+        "Policy Type",
+        "CoolDown(s)",
+        "Trigger Action",
+        "Status",
+    ]
+
+    #
+    #     "scheduled_policy": {
+    #         "launch_time": "2015-07-24T01:21Z"
+    #     },
+    #     "scaling_policy_action": {
+    #         "operation": "REMOVE",
+    #         "instance_number": 1
+    #     },
+    #     "create_time": "2015-07-24T01:09:30Z"
+    # }
+
+    show_column_names = [
+        "Group Id",
+        "Policy ID",
+        "Policy Name",
+        "Policy Type",
+        "Alarm Id",
+        "CoolDown(s)",
+        "Scheduled Policy",
+        "Trigger Action",
+        "Create Time",
+        "Status",
+    ]
+
+    column_2_property = {
+        "Policy ID": "scaling_policy_id",
+        "Policy Name": "scaling_policy_name",
+        "Group Id": "scaling_group_id",
+        "Policy Type": "scaling_policy_type",
+        "CoolDown(s)": "cool_down_time",
+    }
+
+    formatter = {
+        "Scheduled Policy": formatter.format_dict,
+    }
+
+    @property
+    def id(self):
+        return self.scaling_policy_id
+
+    @property
+    def name(self):
+        return self.scaling_policy_name
+
+    @property
+    def status(self):
+        return self.policy_status
+
+    @property
+    def trigger_action(self):
+        if self.scaling_policy_action:
+            operation = self.scaling_policy_action["operation"]
+            instance_number = self.scaling_policy_action["instance_number"]
+            return "%s %s" % (operation, instance_number)
+        return None
+
+

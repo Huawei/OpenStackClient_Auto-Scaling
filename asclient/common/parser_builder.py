@@ -17,7 +17,8 @@ import os
 from asclient.common.i18n import _
 
 
-class BaseParser(object):
+class Base(object):
+
     @staticmethod
     def register_service_option(parser, service_type):
         service_env = service_type.upper().replace('-', '_')
@@ -43,19 +44,19 @@ class BaseParser(object):
                 service_type=service_type)))
 
     @staticmethod
-    def add_limit_option(parser):
+    def add_limit_opt(parser):
         parser.add_argument(
             "--limit",
-            metavar="<count>",
+            metavar="<limit>",
             type=int,
             help=_("return result limit")
         )
 
     @staticmethod
-    def add_offset_option(parser):
+    def add_offset_opt(parser):
         parser.add_argument(
             "--offset",
-            metavar="<count>",
+            metavar="<offset>",
             type=int,
             help=_("return result offset")
         )

@@ -15,6 +15,8 @@
 import logging
 
 from osc_lib.command import command
+
+from asclient.common import parser_builder as bpb
 from asclient.common.i18n import _
 from asclient.osc.v1 import parser_builder as pb
 from asclient.v1 import resource
@@ -22,78 +24,186 @@ from asclient.v1 import resource
 LOG = logging.getLogger(__name__)
 
 
-class ShowPolicy(command.ShowOne):
-    _description = _("show policy")
+class CreateAutoScalingPolicy(command.Command):
+    _description = _("Create Auto Scaling policy")
 
     def get_parser(self, prog_name):
-        parser = super(ShowPolicy, self).get_parser(prog_name)
-        return parser
-
-    def take_action(self, args):
-        client = self.app.client_manager.workspace
-        policy = client.policies.get()
-        columns = resource.Policy.show_column_names
-        formatter = resource.Policy.formatter
-        outputs = policy.get_display_data(columns, formatter=formatter)
-        return columns, outputs
-
-
-class EditPolicy(command.Command):
-    _description = _("edit policy")
-
-    def get_parser(self, prog_name):
-        parser = super(EditPolicy, self).get_parser(prog_name)
-        # usb related
-        pb.Policy.add_switch_arg(parser, 'usb-port-redirection')
-        pb.Policy.add_switch_arg(parser, 'usb-image')
-        pb.Policy.add_switch_arg(parser, 'usb-video')
-        pb.Policy.add_switch_arg(parser, 'usb-printer')
-        pb.Policy.add_switch_arg(parser, 'usb-storage')
-        pb.Policy.add_switch_arg(parser, 'usb-smart-card')
-
-        # printer related
-        pb.Policy.add_switch_arg(parser, 'printer-redirection')
-        pb.Policy.add_switch_arg(parser, 'sync-client-default-printer')
-        pb.Policy.add_printer_driver_arg(parser)
-
-        # file redirection related
-        pb.Policy.add_file_redirection_mode_arg(parser)
-        pb.Policy.add_switch_arg(parser, 'fixed-drive')
-        pb.Policy.add_switch_arg(parser, 'removable-drive')
-        pb.Policy.add_switch_arg(parser, 'cd-rom-drive')
-        pb.Policy.add_switch_arg(parser, 'network-drive')
-
-        # clipboard redirection
-        pb.Policy.add_clipboard_redirection_arg(parser)
-
-        # hdp plus
-        pb.Policy.add_switch_arg(parser, 'hdp-plus')
-        pb.Policy.add_display_level_arg(parser)
-        pb.Policy.add_bandwidth_arg(parser)
-        pb.Policy.add_frame_rate_arg(parser)
-        pb.Policy.add_video_frame_rate_arg(parser)
-        pb.Policy.add_smoothing_factor_arg(parser)
-        pb.Policy.add_lossy_compression_quality_arg(parser)
+        parser = super(CreateAutoScalingPolicy, self).get_parser(prog_name)
+        pb.Policy.add_policy_name_arg(parser)
+        pb.Policy.add_group_opt(parser, required=True)
+        policy_type_help = "Auto Scaling policy type"
+        pb.Policy.add_policy_type_opt(parser, help_=policy_type_help,
+                                      required=True)
+        pb.Policy.add_cool_down_opt(parser)
+        pb.Policy.add_alarm_id_opt(parser)
+        pb.Policy.add_launch_time_opt(parser)
+        pb.Policy.add_recurrence_opt(parser)
+        pb.Policy.add_start_time_opt(parser)
+        pb.Policy.add_end_time_opt(parser)
+        pb.Policy.add_action_opt(parser)
 
         return parser
 
     def take_action(self, args):
-        client = self.app.client_manager.workspace
-        client.policies.edit(args.enable_usb_port_redirection,
-                             args.enable_usb_image, args.enable_usb_video,
-                             args.enable_usb_printer, args.enable_usb_storage,
-                             args.enable_usb_smart_card,
-                             args.enable_printer_redirection,
-                             args.enable_sync_client_default_printer,
-                             args.universal_printer_driver,
-                             args.file_redirection_mode,
-                             args.enable_fixed_drive,
-                             args.enable_removable_drive,
-                             args.enable_cd_rom_drive,
-                             args.enable_network_drive,
-                             args.clipboard_redirection, args.enable_hdp_plus,
-                             args.display_level, args.bandwidth,
-                             args.frame_rate, args.video_frame_rate,
-                             args.smoothing_factor,
-                             args.lossy_compression_quality)
+        groups = self.app.client_manager.auto_scaling.groups
+        policies = self.app.client_manager.auto_scaling.policies
+
+        group_id = groups.find(args.group).id
+        kwargs = {
+            "alarm_id": args.alarm_id,
+            "launch_time": args.launch_time,
+            "start_time": args.start_time,
+            "end_time": args.end_time,
+            "cool_down": args.cool_down,
+        }
+
+        if args.action:
+            kwargs.update(args.action)
+        if args.recurrence:
+            kwargs.update(args.recurrence)
+        created = policies.create(group_id, args.name, args.type, **kwargs)
+        return "Policy %s created" % created.id
+
+
+class EditAutoScalingPolicy(command.Command):
+    _description = _("Edit Auto Scaling Policy")
+
+    def get_parser(self, prog_name):
+        parser = super(EditAutoScalingPolicy, self).get_parser(prog_name)
+        pb.Policy.add_policy_id_arg(parser, 'edit')
+        policy_name_help = "Change policy name to"
+        pb.Policy.add_policy_name_opt(parser, help_=policy_name_help,
+                                      required=False)
+        policy_type_help = "Change policy type to"
+        pb.Policy.add_policy_type_opt(parser, help_=policy_type_help,
+                                      required=False)
+        pb.Policy.add_cool_down_opt(parser)
+        pb.Policy.add_alarm_id_opt(parser)
+        pb.Policy.add_launch_time_opt(parser)
+        pb.Policy.add_recurrence_opt(parser)
+        pb.Policy.add_start_time_opt(parser)
+        pb.Policy.add_end_time_opt(parser)
+        pb.Policy.add_action_opt(parser)
+        return parser
+
+    def take_action(self, args):
+        policies = self.app.client_manager.auto_scaling.policies
+
+        kwargs = {
+            "type_": args.type,
+            "name": args.name,
+            "alarm_id": args.alarm_id,
+            "launch_time": args.launch_time,
+            "start_time": args.start_time,
+            "end_time": args.end_time,
+            "cool_down": args.cool_down,
+        }
+
+        if args.action:
+            kwargs.update(args.action)
+        if args.recurrence:
+            kwargs.update(args.recurrence)
+        policies.edit(args.policy, **kwargs)
+        return "done"
+
+
+class ListAutoScalingPolicy(command.Lister):
+    _description = _("List Auto Scaling Policies")
+
+    def get_parser(self, prog_name):
+        parser = super(ListAutoScalingPolicy, self).get_parser(prog_name)
+        pb.Policy.add_group_opt(parser, required=True)
+        pb.Policy.add_policy_name_opt(parser)
+        pb.Policy.add_policy_type_opt(parser)
+        bpb.Base.add_limit_opt(parser)
+        bpb.Base.add_offset_opt(parser)
+        return parser
+
+    def take_action(self, args):
+        group_mgr = self.app.client_manager.auto_scaling.groups
+        group_id = group_mgr.find(args.group).id
+
+        policy_mgr = self.app.client_manager.auto_scaling.policies
+        policies = policy_mgr.list(group_id, name=args.name, type_=args.type,
+                                   offset=args.offset, limit=args.limit)
+
+        columns = resource.AutoScalingPolicy.list_column_names
+        data = (p.get_display_data(columns) for p in policies)
+        return columns, data
+
+
+class ShowAutoScalingPolicy(command.ShowOne):
+    _description = _("Show Auto Scaling Policy")
+
+    def get_parser(self, prog_name):
+        parser = super(ShowAutoScalingPolicy, self).get_parser(prog_name)
+        pb.Policy.add_policy_id_arg(parser, 'show')
+        return parser
+
+    def take_action(self, args):
+        policy_mgr = self.app.client_manager.auto_scaling.policies
+        policy = policy_mgr.find(args.policy)
+        columns = resource.AutoScalingPolicy.show_column_names
+        formatter = resource.AutoScalingPolicy.formatter
+        data = policy.get_display_data(columns, formatter=formatter)
+        return columns, data
+
+
+class DeleteAutoScalingPolicy(command.Command):
+    _description = _("Delete Auto Scaling Policy")
+
+    def get_parser(self, prog_name):
+        parser = super(DeleteAutoScalingPolicy, self).get_parser(prog_name)
+        pb.Policy.add_policy_id_arg(parser, 'delete')
+        return parser
+
+    def take_action(self, args):
+        policy_mgr = self.app.client_manager.auto_scaling.policies
+        policy = policy_mgr.find(args.policy)
+        policy_mgr.delete(policy.id)
+        return 'done'
+
+
+class PauseAutoScalingPolicy(command.Command):
+    _description = _("Pause Auto Scaling Policy")
+
+    def get_parser(self, prog_name):
+        parser = super(PauseAutoScalingPolicy, self).get_parser(prog_name)
+        pb.Policy.add_policy_id_arg(parser, 'pause')
+        return parser
+
+    def take_action(self, args):
+        policy_mgr = self.app.client_manager.auto_scaling.policies
+        policy = policy_mgr.find(args.policy)
+        policy_mgr.pause(policy.id)
+        return 'done'
+
+
+class ExecuteAutoScalingPolicy(command.Command):
+    _description = _("Execute Auto Scaling Policy")
+
+    def get_parser(self, prog_name):
+        parser = super(ExecuteAutoScalingPolicy, self).get_parser(prog_name)
+        pb.Policy.add_policy_id_arg(parser, 'execute')
+        return parser
+
+    def take_action(self, args):
+        policy_mgr = self.app.client_manager.auto_scaling.policies
+        policy = policy_mgr.find(args.policy)
+        policy_mgr.execute(policy.id)
+        return 'done'
+
+
+class ResumeAutoScalingPolicy(command.Command):
+    _description = _("Resume Auto Scaling Policy")
+
+    def get_parser(self, prog_name):
+        parser = super(ResumeAutoScalingPolicy, self).get_parser(prog_name)
+        pb.Policy.add_policy_id_arg(parser, 'resume')
+        return parser
+
+    def take_action(self, args):
+        policy_mgr = self.app.client_manager.auto_scaling.policies
+        policy = policy_mgr.find(args.policy)
+        policy_mgr.resume(policy.id)
         return 'done'

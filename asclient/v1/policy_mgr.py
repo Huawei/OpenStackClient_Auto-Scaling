@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -12,6 +13,7 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
+from keystoneauth1 import exceptions
 
 from asclient.common import manager
 from asclient.common import utils
@@ -19,92 +21,223 @@ from asclient.v1 import resource
 
 
 class PolicyManager(manager.Manager):
-    """Policy API management"""
+    """Auto Scaling Policy Manager"""
 
-    resource_class = resource.Policy
+    resource_class = resource.AutoScalingPolicy
 
-    def get(self):
-        return self._get("/policies", key="policies")
+    def find(self, id_or_name):
+        """find auto scaling policy by id or name
 
-    def edit(self, enable_usb_port_redirection=None,
-             enable_usb_image=None, enable_usb_video=None,
-             enable_usb_printer=None, enable_usb_storage=None,
-             enable_usb_smart_card=None, enable_printer_redirection=None,
-             enable_sync_client_default_printer=None,
-             universal_printer_driver=None, file_redirection_mode=None,
-             enable_fixed_drive=None, enable_removable_drive=None,
-             enable_cd_rom_drive=None, enable_network_drive=None,
-             clipboard_redirection=None, enable_hdp_plus=None,
-             display_level=None, bandwidth=None, frame_rate=None,
-             video_frame_rate=None, smoothing_factor=None,
-             lossy_compression_quality=None,
-             ):
-        policies = {}
+        exactly match will be performed
+        :param id_or_name:
+        :rtype: resource.AutoScalingPolicy
+        :return: AutoScalingPolicy which id or name matches id_or_name
+        """
+        try:
+            return self.get(id_or_name)
+        except exceptions.ClientException:
+            pass
 
-        if enable_usb_port_redirection is not None:
-            usb = dict(enable=enable_usb_port_redirection)
-            options = utils.remove_empty_from_dict({
-                "usb_image_enable": enable_usb_image,
-                "usb_video_enable": enable_usb_video,
-                "usb_printer_enable": enable_usb_printer,
-                "usb_storage_enable": enable_usb_storage,
-                "usb_smart_card_enable": enable_usb_smart_card
-            })
-            if enable_usb_port_redirection and options:
-                usb["options"] = options
-            policies["usb_port_redirection"] = usb
+        # TODO(Woo) list need as group id now.
+        # results = self.list(name=id_or_name)
+        # matched_number = len(results)
+        # if matched_number > 1:
+        #     raise execs.NotUniqueMatch
+        # elif matched_number == 1:
+        #     return results[0]
 
-        if enable_printer_redirection is not None:
-            printer = dict(enable=enable_printer_redirection)
-            options = utils.remove_empty_from_dict({
-                "sync_client_default_printer_enable":
-                    enable_sync_client_default_printer,
-                "universal_printer_driver": universal_printer_driver,
-            })
-            if enable_printer_redirection and options:
-                printer["options"] = options
-            policies["printer_redirection"] = printer
+        message = _("No Auto Scaling Group with ID or name of "
+                    "'%s' exists.") % id_or_name
+        raise exceptions.NotFound(message)
 
-        if file_redirection_mode:
-            file_redirection = dict(redirection_mode=file_redirection_mode)
-            options = utils.remove_empty_from_dict({
-                "fixed_drive_enable": enable_fixed_drive,
-                "removable_drive_enable": enable_removable_drive,
-                "cd_rom_drive_enable": enable_cd_rom_drive,
-                "network_drive_enable": enable_network_drive,
-            })
-            if file_redirection_mode != "DISABLED" and options:
-                file_redirection["options"] = options
-            policies["file_redirection"] = file_redirection
+    def list(self, as_group_id, name=None, type_=None, limit=None, offset=None):
+        """list policy for auto scaling group
 
-        if clipboard_redirection:
-            policies["clipboard_redirection"] = clipboard_redirection
-
-        # HDPPlus和显示级别共同控制的选项。
-        # 当开启hdp_plus_enable时，可修改lossy_compression_quality
-        # 字段的值；否则可修改options中所有字段的值。
-        hdp_plus = utils.remove_empty_from_dict({
-            "hdp_plus_enable": enable_hdp_plus,
-            "display_level": display_level,
+        :param as_group_id:
+        :param name:
+        :param type_:
+        :param limit:
+        :param offset:
+        :return:
+        :rtype: [resource.AutoScalingPolicy]
+        """
+        params = utils.remove_empty_from_dict({
+            "scaling_policy_name": name,
+            "scaling_policy_type": type_,
+            "start_number": offset,
+            "limit": limit,
         })
 
-        if enable_hdp_plus is not None:
-            if enable_hdp_plus:
-                if lossy_compression_quality is not None:
-                    hdp_plus["options"] = dict(
-                        lossy_compression_quality=lossy_compression_quality)
-            else:
-                options = utils.remove_empty_from_dict({
-                    "bandwidth": bandwidth,
-                    "frame_rate": frame_rate,
-                    "video_frame_rate": video_frame_rate,
-                    "smoothing_factor": smoothing_factor,
-                })
+        url = "/scaling_policy/%s/list" % as_group_id
+        return self._list(url, params=params, key="scaling_policies")
 
-                if options:
-                    hdp_plus["options"] = options
+    def get(self, as_policy_id):
+        """get auto scaling policy detail
 
-        if hdp_plus:
-            policies["hdp_plus"] = hdp_plus
+        :param as_policy_id:
+        :return:
+        :rtype: resource.AutoScalingPolicy
+        """
+        url = "/scaling_policy/" + as_policy_id
+        return self._get(url, key="scaling_policy")
 
-        return self._update_all("/policies", json=dict(policies=policies))
+    def create(self, as_group_id, name, type_, cool_down=None, alarm_id=None,
+               launch_time=None, start_time=None, end_time=None,
+               recurrence_type=None, recurrence_value=None, operation=None,
+               instance_number=None):
+        """create a new policy
+
+        :param as_group_id:
+        :param name: policy name
+        :param type_: policy type, ["ALARM", "SCHEDULED", "RECURRENCE"]
+        :param cool_down: Auto-Scaling policy schedule period (second),
+                        900 seconds by default
+        :param alarm_id: Alarm Id to assign to the policy (Only effect when
+                        policy-type is ALARM)
+        :param launch_time: Schedule launch time(Only Effect when policy-type
+                            is SCHEDULED)
+        :param start_time: Recurrence start UTC time (Effect only when policy-
+                        type is RECURRENCE)
+        :param end_time: Recurrence end UTC time (Effect only when policy-type
+                        is RECURRENCE)
+        :param recurrence_type: Recurrence type contains ['Daily', 'Weekly',
+                        'Monthly'] (Effect only when policy-type is RECURRENCE)
+        :param recurrence_value: When type is Daily, value should be HH:ss
+                        (example: Daily:18:00 means schedule at Everyday's
+                        18:00); When type is Weekly, value should be 1-7
+                        (example: Weekly:1,3 means schedule at Every
+                        Sunday,Wednesday); When type is Monthly, value should
+                        be 1-31 (example: Monthly:1,10,20 means schedule at
+                        1,10,20 of Every Month)
+        :param operation: Action performed when policy execute, operation
+                        contains ['ADD', 'REMOVE', 'SET']
+        :param instance_number: Instance numbers to operate
+        :return:
+        """
+
+        str_fmt = "%Y-%m-%dT%H:%MZ"
+        start_time_str = start_time.strftime(str_fmt) if start_time else None
+        end_time_str = end_time.strftime(str_fmt) if end_time else None
+        launch_time = launch_time.strftime(str_fmt) if launch_time else None
+
+        if recurrence_type == 'Daily':
+            launch_time = recurrence_value
+            recurrence_value = None
+
+        json = utils.remove_empty_from_dict({
+            "scaling_policy_name": name,
+            "scaling_policy_action": utils.remove_empty_from_dict({
+                "operation": operation,
+                "instance_number": instance_number
+            }),
+            "cool_down_time": cool_down,
+            "alarm_id": alarm_id,
+            "scheduled_policy": utils.remove_empty_from_dict({
+                "launch_time": launch_time,
+                "recurrence_type": recurrence_type,
+                "recurrence_value": recurrence_value,
+                "start_time": start_time_str,
+                "end_time": end_time_str
+            }),
+            "scaling_policy_type": type_,
+            "scaling_group_id": as_group_id
+        })
+        return self._create("/scaling_policy", json=json)
+
+    def edit(self, as_policy_id, name=None, type_=None, cool_down=None,
+             alarm_id=None, launch_time=None, start_time=None, end_time=None,
+             recurrence_type=None, recurrence_value=None, operation=None,
+             instance_number=None):
+        """Edit a policy
+
+        :param as_policy_id: the policy to edit
+        :param name: policy name
+        :param type_: policy type, ["ALARM", "SCHEDULED", "RECURRENCE"]
+        :param cool_down: Auto-Scaling policy schedule period (second),
+                        900 seconds by default
+        :param alarm_id: Alarm Id to assign to the policy (Only effect when
+                        policy-type is ALARM)
+        :param launch_time: Schedule launch time(Only Effect when policy-type
+                            is SCHEDULED)
+        :param start_time: Recurrence start UTC time (Effect only when policy-
+                        type is RECURRENCE)
+        :param end_time: Recurrence end UTC time (Effect only when policy-type
+                        is RECURRENCE)
+        :param recurrence_type: Recurrence type contains ['Daily', 'Weekly',
+                        'Monthly'] (Effect only when policy-type is RECURRENCE)
+        :param recurrence_value: When type is Daily, value should be HH:ss
+                        (example: Daily:18:00 means schedule at Everyday's
+                        18:00); When type is Weekly, value should be 1-7
+                        (example: Weekly:1,3 means schedule at Every
+                        Sunday,Wednesday); When type is Monthly, value should
+                        be 1-31 (example: Monthly:1,10,20 means schedule at
+                        1,10,20 of Every Month)
+        :param operation: Action performed when policy execute, operation
+                        contains ['ADD', 'REMOVE', 'SET']
+        :param instance_number: Instance numbers to operate
+        :return:
+        """
+
+        str_fmt = "%Y-%m-%dT%H:%MZ"
+        start_time_str = start_time.strftime(str_fmt) if start_time else None
+        end_time_str = end_time.strftime(str_fmt) if end_time else None
+        launch_time = launch_time.strftime(str_fmt) if launch_time else None
+
+        if recurrence_type == 'Daily':
+            launch_time = recurrence_value
+            recurrence_value = None
+
+        json = utils.remove_empty_from_dict({
+            "scaling_policy_name": name,
+            "scaling_policy_action": utils.remove_empty_from_dict({
+                "operation": operation,
+                "instance_number": instance_number
+            }),
+            "cool_down_time": cool_down,
+            "alarm_id": alarm_id,
+            "scheduled_policy": utils.remove_empty_from_dict({
+                "launch_time": launch_time,
+                "recurrence_type": recurrence_type,
+                "recurrence_value": recurrence_value,
+                "start_time": start_time_str,
+                "end_time": end_time_str
+            }),
+            "scaling_policy_type": type_,
+        })
+        return self._update_all("/scaling_policy/" + as_policy_id, json=json)
+
+    def pause(self, as_policy_id):
+        """pause auto scaling policy
+
+        :param as_policy_id:
+        :return:
+        """
+        url = "/scaling_policy/%s/action" % as_policy_id
+        return self._create(url, json=dict(action="pause"), raw=True)
+
+    def resume(self, as_policy_id):
+        """resume auto scaling policy
+
+        :param as_policy_id:
+        :return:
+        """
+        url = "/scaling_policy/%s/action" % as_policy_id
+        return self._create(url, json=dict(action="resume"), raw=True)
+
+    def execute(self, as_policy_id):
+        """resume auto scaling policy
+
+        :param as_policy_id:
+        :return:
+        """
+        url = "/scaling_policy/%s/action" % as_policy_id
+        return self._create(url, json=dict(action="execute"), raw=True)
+
+    def delete(self, as_policy_id):
+        """delete auto scaling policy
+
+        :param as_policy_id:
+        :return:
+        """
+        url = "/scaling_policy/" + as_policy_id
+        return self._delete(url)

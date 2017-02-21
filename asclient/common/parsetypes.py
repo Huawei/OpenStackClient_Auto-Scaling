@@ -61,9 +61,9 @@ def volume_type(user_input=''):
             raise ValueError
         _volume_type = string.upper(volume[0])
         volume_size = int(volume[1])
-        if _volume_type != 'SSD' and _volume_type != 'SATA':
+        if _volume_type not in ['SSD', 'SATA', 'SAS',]:
             raise ValueError
-        return dict(type=_volume_type, size=volume_size)
+        return dict(volume_type=_volume_type, size=volume_size)
     except ValueError:
         msg = _("%s is not a valid volume format") % user_input
         raise argparse.ArgumentTypeError(msg)
@@ -89,4 +89,37 @@ def subnet_type(user_input=''):
         return subnet
     except ValueError as e:
         msg = _("%s is not a valid NIC") % user_input
+        raise argparse.ArgumentTypeError(msg)
+
+
+# noinspection PyTypeChecker
+def policy_action_type(user_input=''):
+    try:
+        split = user_input.split(':', 1)
+        if len(split) != 2:
+            raise ValueError
+        operation = split[0]
+        instance_number = int(split[1])
+        return dict(operation=operation, instance_number=instance_number)
+    except ValueError:
+        msg = _("%s is not a valid policy action") % user_input
+        raise argparse.ArgumentTypeError(msg)
+
+
+# noinspection PyTypeChecker
+def recurrence_type(user_input=''):
+    try:
+        split = user_input.split(':', 1)
+        if len(split) != 2:
+            raise ValueError
+        type_ = split[0]
+        value = split[1]
+        # ok, let server validate the user input
+        # if type_ not in ['Daily', 'Weekly', 'Monthly']:
+        #     msg = _("Recurrence type must be one of "
+        #             "('Daily', 'Weekly', 'Monthly')")
+        #     raise argparse.ArgumentTypeError(msg)
+        return dict(recurrence_type=type_, recurrence_value=value)
+    except ValueError:
+        msg = _("%s is not a valid policy action") % user_input
         raise argparse.ArgumentTypeError(msg)

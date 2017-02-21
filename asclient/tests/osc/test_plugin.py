@@ -32,20 +32,15 @@ class TestWorkspacePlugin(base.BaseTestCase):
         instance._cli_options = mock.Mock()
         instance._cli_options.config = mock.Mock()
         instance._cli_options.config.get.return_value = (
-            "http://workspace.endpoint"
+            "http://auto-scaling.endpoint"
         )
         instance.region_name = fakes.REGION_NAME
         instance.interface = fakes.INTERFACE
         plugin.make_client(instance)
 
-        kwargs = {
-            'region_name': instance.region_name,
-            'interface': instance.interface
-        }
-
         client.assert_called_once_with(
             instance.session,
-            "http://workspace.endpoint",
+            "http://auto-scaling.endpoint",
             region_name=fakes.REGION_NAME,
             interface=fakes.INTERFACE,
         )
@@ -54,10 +49,10 @@ class TestWorkspacePlugin(base.BaseTestCase):
         parser = argparse.ArgumentParser(description='TestUnit')
         plugin.build_option_parser(parser)
 
-        parsed = parser.parse_args(['--os-workspace-api-version',
+        parsed = parser.parse_args(['--os-as-api-version',
                                     '1',
-                                    '--os-workspace-endpoint-override',
-                                    'http://workspace.endpoint'])
-        self.assertEqual(parsed.os_workspace_api_version, "1")
-        self.assertEqual(parsed.os_workspace_endpoint_override,
-                         'http://workspace.endpoint')
+                                    '--os-as-endpoint-override',
+                                    'http://auto-scaling.endpoint'])
+        self.assertEqual(parsed.os_as_api_version, "1")
+        self.assertEqual(parsed.os_as_endpoint_override,
+                         'http://auto-scaling.endpoint')

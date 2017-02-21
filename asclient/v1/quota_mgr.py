@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -12,19 +13,21 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
-from keystoneauth1 import exceptions
 
-from asclient.common import exceptions as execs
 from asclient.common import manager
-from asclient.common import utils
-from asclient.common.i18n import _
 from asclient.v1 import resource
 
 
-class ProductManager(manager.Manager):
-    """Product API management"""
+class QuotaManager(manager.Manager):
+    """Auto Scaling Quota Manager"""
 
-    resource_class = resource.Product
+    resource_class = resource.AutoScalingQuota
 
-    def list(self):
-        return self._list("/products", key="products")
+    def list(self, as_group_id=None):
+        """list quotas
+
+        :param as_group_id: if present, show quotas of the group
+        :return:
+        """
+        url = '/quotas' if as_group_id is None else '/quotas/' + as_group_id
+        return self._list(url, key='quotas.resources')

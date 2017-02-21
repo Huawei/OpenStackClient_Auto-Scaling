@@ -22,16 +22,24 @@ from asclient.v1 import resource
 LOG = logging.getLogger(__name__)
 
 
-class ListProduct(command.Lister):
-    _description = _("list product")
+class ListQuota(command.Lister):
+    _description = _("list auto scaling quotas")
 
     def get_parser(self, prog_name):
-        parser = super(ListProduct, self).get_parser(prog_name)
+        parser = super(ListQuota, self).get_parser(prog_name)
+        parser.add_argument(
+            '--group',
+            metavar="<group>",
+            required=False,
+            help=_("list quota of group (ID or name)"),
+        )
         return parser
 
     def take_action(self, args):
-        client = self.app.client_manager.workspace
-        products = client.products.list()
-        columns = resource.Product.list_column_names
-        outputs = [r.get_display_data(columns) for r in products]
-        return columns, outputs
+        quota_mgr = self.app.client_manager.auto_scaling.quotas
+        group_mgr = self.app.client_manager.auto_scaling.groups
+        group_id = group_mgr.find(args.group).id if args.group else None
+        quotas = quota_mgr.list(as_group_id=group_id)
+        columns = resource.AutoScalingQuota.list_column_names
+        output = [q.get_display_data(columns) for q in quotas]
+        return columns, output

@@ -1,0 +1,56 @@
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.coverage-html
+.tox
+.testrepository
+flake8.log
+cover
+debug.py
+
+# pyenv
+.python-version
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Idea
+.idea
+*.iml
+
+# generic venvs
+.venv
+
+# OSX metadata
+.DS_Store
+
+# PBR
+AUTHORS
+ChangeLog
