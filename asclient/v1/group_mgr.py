@@ -98,6 +98,8 @@ class GroupManager(manager.Manager):
             pass
 
         results = self.list(name=id_or_name)
+        results = [result for result in results
+                   if result.name == id_or_name]
         matched_number = len(results)
         if matched_number > 1:
             raise execs.NotUniqueMatch

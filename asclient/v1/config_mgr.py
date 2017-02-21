@@ -42,6 +42,8 @@ class ConfigManager(manager.Manager):
             pass
 
         results = self.list(name=id_or_name)
+        results = [result for result in results
+                   if result.name == id_or_name]
         matched_number = len(results)
         if matched_number > 1:
             raise execs.NotUniqueMatch
@@ -148,4 +150,4 @@ class ConfigManager(manager.Manager):
             "scaling_configuration_name": name,
             "instance_config": config
         }
-        return self._create("/scaling_configuration", json=json, raw=True)
+        return self._create("/scaling_configuration", json=json)

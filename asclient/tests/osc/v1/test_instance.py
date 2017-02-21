@@ -18,13 +18,12 @@ from asclient.osc.v1 import instance
 from asclient.tests import base
 from asclient.v1 import instance_mgr
 from asclient.v1 import resource
+from osc_lib import utils
 
 
-@mock.patch.object(instance_mgr.InstanceManager, "_list")
-class TestListAutoScalingInstance(base.AutoScalingV1BaseTestCase):
-
+class InstanceV1BaseTestCase(base.AutoScalingV1BaseTestCase):
     def __init__(self, *args, **kwargs):
-        super(TestListAutoScalingInstance, self).__init__(*args, **kwargs)
+        super(InstanceV1BaseTestCase, self).__init__(*args, **kwargs)
         self._instances = [
             {"instance_id": "dacd968b-2602-470d-a0e2-92a20c2f2b8b",
              "scaling_group_id": "ac8acbb4-e6ce-4890-a9f2-d8712b3d7385",
@@ -51,6 +50,9 @@ class TestListAutoScalingInstance(base.AutoScalingV1BaseTestCase):
              "create_time": "2017-02-19T08:24:12Z",
              "instance_name": "as-config-TEO_2MKT59WO"}, ]
 
+
+@mock.patch.object(instance_mgr.InstanceManager, "_list")
+class TestListAutoScalingInstance(InstanceV1BaseTestCase):
     def setUp(self):
         super(TestListAutoScalingInstance, self).setUp()
         self.cmd = instance.ListAutoScalingInstance(self.app, None)
@@ -114,23 +116,25 @@ class TestListAutoScalingInstance(base.AutoScalingV1BaseTestCase):
             self.assertEquals(expected, data)
 
 
+@mock.patch.object(instance_mgr.InstanceManager, "list")
 @mock.patch.object(instance_mgr.InstanceManager, "_create")
-class TestRemoveAutoScalingInstance(base.AutoScalingV1BaseTestCase):
-
+class TestRemoveAutoScalingInstance(InstanceV1BaseTestCase):
     def setUp(self):
         super(TestRemoveAutoScalingInstance, self).setUp()
         self.cmd = instance.RemoveAutoScalingInstance(self.app, None)
 
-    def test_remove_as_instance(self, mocked):
+    def test_remove_as_instance(self, mock_create, mock_list):
         args = [
             "--group", "group-id",
-            "--offset", "10",
-            "--limit", "20",
+            "--instance", "dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+            "--instance", "as-config-TEO_2MKT59WO",
+            "--delete",
         ]
         verify_args = [
             ("group", "group-id"),
-            ("offset", 10),
-            ("limit", 20),
+            ("instances", ["dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+                           "as-config-TEO_2MKT59WO", ]),
+            ("delete", True),
         ]
         parsed_args = self.check_parser(
             self.cmd, args, verify_args
@@ -139,38 +143,95 @@ class TestRemoveAutoScalingInstance(base.AutoScalingV1BaseTestCase):
         with self.mocked_group_find as mocked_fg:
             instances = [resource.AutoScalingInstance(None, i)
                          for i in self._instances]
-            mocked.return_value = br.ListWithMeta(instances, "Request-ID")
-            columns, data = self.cmd.take_action(parsed_args)
+            mock_list.return_value = br.ListWithMeta(instances, "Request-ID")
+            mock_create.return_value = br.StrWithMeta('', 'Request-ID-2')
+            result = self.cmd.take_action(parsed_args)
             mocked_fg.assert_called_once_with("group-id")
+            mock_list.assert_called_once_with(self._group.id)
+
             url = "/scaling_group_instance/%s/action" % self._group.id
-            params = {
-                "life_cycle_status": "INSERVICE",
-                "health_status": "NORMAL",
-                "start_number": 10,
-                "limit": 20,
+            json = {
+                "action": "REMOVE",
+                "instances_id": ["dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+                                 "35d9225d-ca47-4d55-bc5d-3858c34610a5", ],
+                "instance_delete": "yes"
             }
-            mocked.assert_called_once_with(url, params=params,
-                                           key="scaling_group_instances")
 
-            self.assertEquals(resource.AutoScalingInstance.list_column_names,
-                              columns)
+            mock_create.assert_called_once_with(url, json=json, raw=True)
+            self.assertEquals('done', result)
 
-            expected = [('dacd968b-2602-470d-a0e2-92a20c2f2b8b',
-                         'as-config-TEO_XQF2JJSI',
-                         'as-group-teo',
-                         'as-config-TEO',
-                         'INSERVICE',
-                         'NORMAL'),
-                        ('4699d02c-6f4b-47e3-be79-8b92c665310b',
-                         'as-config-TEO_LV1JS5P3',
-                         'as-group-teo',
-                         'as-config-TEO',
-                         'INSERVICE',
-                         'NORMAL'),
-                        ('35d9225d-ca47-4d55-bc5d-3858c34610a5',
-                         'as-config-TEO_2MKT59WO',
-                         'as-group-teo',
-                         'as-config-TEO',
-                         'INSERVICE',
-                         'NORMAL')]
-            self.assertEquals(expected, data)
+    def test_soft_remove_as_instance(self, mock_create, mock_list):
+        args = [
+            "--group", "group-id",
+            "--instance", "dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+            "--instance", "35d9225d-ca47-4d55-bc5d-3858c34610a5",
+        ]
+        verify_args = [
+            ("group", "group-id"),
+            ("instances", ["dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+                           "35d9225d-ca47-4d55-bc5d-3858c34610a5", ]),
+        ]
+        parsed_args = self.check_parser(
+            self.cmd, args, verify_args
+        )
+
+        with self.mocked_group_find as mocked_fg:
+            instances = [resource.AutoScalingInstance(None, i)
+                         for i in self._instances]
+            mock_list.return_value = br.ListWithMeta(instances, "Request-ID")
+            mock_create.return_value = br.StrWithMeta('', 'Request-ID-2')
+            result = self.cmd.take_action(parsed_args)
+            mocked_fg.assert_called_once_with("group-id")
+            mock_list.assert_called_once_with(self._group.id)
+
+            url = "/scaling_group_instance/%s/action" % self._group.id
+            json = {
+                "action": "REMOVE",
+                "instances_id": ["dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+                                 "35d9225d-ca47-4d55-bc5d-3858c34610a5", ],
+            }
+
+            mock_create.assert_called_once_with(url, json=json, raw=True)
+            self.assertEquals('done', result)
+
+
+@mock.patch.object(utils, "find_resource")
+@mock.patch.object(instance_mgr.InstanceManager, "_create")
+class TestAddAutoScalingInstance(InstanceV1BaseTestCase):
+
+    def setUp(self):
+        super(TestAddAutoScalingInstance, self).setUp()
+        self.cmd = instance.AddAutoScalingInstance(self.app, None)
+
+    def test_add_as_instance(self, mock_create, mock_find_resource):
+        args = [
+            "--group", "group-id",
+            "--instance", "dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+            "--instance", "35d9225d-ca47-4d55-bc5d-3858c34610a5",
+        ]
+        verify_args = [
+            ("group", "group-id"),
+            ("instances", ["dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+                           "35d9225d-ca47-4d55-bc5d-3858c34610a5", ]),
+        ]
+        parsed_args = self.check_parser(
+            self.cmd, args, verify_args
+        )
+
+        with self.mocked_group_find as mocked_fg:
+            mock_find_resource.side_effect = [
+                br.Resource(None, dict(id=parsed_args.instances[0])),
+                br.Resource(None, dict(id=parsed_args.instances[1])),
+            ]
+            mock_create.return_value = br.StrWithMeta('', 'Request-ID-2')
+            result = self.cmd.take_action(parsed_args)
+            mocked_fg.assert_called_once_with("group-id")
+
+            url = "/scaling_group_instance/%s/action" % self._group.id
+            json = {
+                "action": "ADD",
+                "instances_id": ["dacd968b-2602-470d-a0e2-92a20c2f2b8b",
+                                 "35d9225d-ca47-4d55-bc5d-3858c34610a5", ],
+            }
+            mock_create.assert_called_once_with(url, json=json, raw=True)
+            self.assertEquals('done', result)

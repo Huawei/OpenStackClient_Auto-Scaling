@@ -14,6 +14,7 @@
 #
 import mock
 from asclient.tests import fakes
+from asclient.v1 import config_mgr
 from asclient.v1 import group_mgr
 from asclient.v1 import resource
 from osc_lib.tests import utils
@@ -31,6 +32,7 @@ class AutoScalingV1BaseTestCase(BaseTestCase):
         super(AutoScalingV1BaseTestCase, self).__init__(*args, **kwargs)
         self.cmd = None
         self.mocked_group_find = None
+        self.mocked_config_find = None
         self._group = resource.AutoScalingGroup(None, {
             "networks": [
                 {
@@ -66,11 +68,50 @@ class AutoScalingV1BaseTestCase(BaseTestCase):
             ]
         })
 
+        self._config = resource.AutoScalingConfig(None, {
+            "tenant": "ce061903a53545dcaddb300093b477d2",
+            "scaling_configuration_id": "6afe46f9-7d3d-4046-8748-3b2a1085ad86",
+            "scaling_configuration_name": " config_name_1",
+            "instance_config": {
+                "disk": [
+                    {
+                        "size": 40,
+                        "volume_type": "SATA",
+                        "disk_type": "SYS"
+                    },
+                    {
+                        "size": 100,
+                        "volume_type": "SATA",
+                        "disk_type": "DATA"
+                    }
+                ],
+                "adminPass": "***",
+                "personality": None,
+                "instance_name": None,
+                "instance_id": None,
+                "flavorRef": "103",
+                "imageRef": "37ca2b35-6fc7-47ab-93c7-900324809c5c",
+                "key_name": "keypair01",
+                "public_ip": None,
+                "user_data": None,
+                "metadata": {"prop1": "value1", "prop2": "value2"}
+            },
+            "create_time": "2015-07-23T01:04:07Z"
+        }
+                                                 )
+
     def setUp(self):
         super(AutoScalingV1BaseTestCase, self).setUp()
         fake_as_client = fakes.FakeAutoScalingV1Client()
         self.app.client_manager.auto_scaling = fake_as_client
         self.app.client_manager.network = mock.Mock()
+        self.app.client_manager.compute = mock.Mock()
+        self.app.client_manager.image = mock.Mock(
+            images=mock.Mock()
+        )
         self.mocked_group_find = mock.patch.object(
             group_mgr.GroupManager, "find", return_value=self._group
+        )
+        self.mocked_config_find = mock.patch.object(
+            config_mgr.ConfigManager, "find", return_value=self._config
         )
