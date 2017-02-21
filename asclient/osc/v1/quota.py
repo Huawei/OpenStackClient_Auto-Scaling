@@ -41,4 +41,5 @@ class ListQuota(command.Lister):
         group_id = group_mgr.find(args.group).id if args.group else None
         quotas = quota_mgr.list(as_group_id=group_id)
         columns = resource.AutoScalingQuota.list_column_names
-        return columns, (q.get_display_data(columns) for q in quotas)
+        output = [q.get_display_data(columns) for q in quotas]
+        return columns, output

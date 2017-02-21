@@ -84,8 +84,7 @@ class RemoveAutoScalingInstance(command.Command):
                 msg = 'Instance with id or name "%s" is not belong to Group %s'
                 raise exceptions.CommandError(msg % (id_or_name, group_id))
 
-        mgr.remove_instances(group_id, instance_id_list,
-                             delete_instance=args.delete)
+        mgr.remove_instances(group_id, converted, delete_instance=args.delete)
         return 'done'
 
 
