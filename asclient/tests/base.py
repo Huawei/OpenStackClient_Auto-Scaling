@@ -13,11 +13,13 @@
 #   under the License.
 #
 import mock
+from osc_lib.tests import utils
+
 from asclient.tests import fakes
 from asclient.v1 import config_mgr
 from asclient.v1 import group_mgr
+from asclient.v1 import policy_mgr
 from asclient.v1 import resource
-from osc_lib.tests import utils
 
 
 class BaseTestCase(utils.TestCommand):
@@ -33,6 +35,7 @@ class AutoScalingV1BaseTestCase(BaseTestCase):
         self.cmd = None
         self.mocked_group_find = None
         self.mocked_config_find = None
+        self.mocked_policy_find = None
         self._group = resource.AutoScalingGroup(None, {
             "networks": [
                 {
@@ -97,8 +100,24 @@ class AutoScalingV1BaseTestCase(BaseTestCase):
                 "metadata": {"prop1": "value1", "prop2": "value2"}
             },
             "create_time": "2015-07-23T01:04:07Z"
-        }
-                                                 )
+        })
+
+        self._policy = resource.AutoScalingPolicy(None, {
+            "scaling_policy_id": "fd7d63ce-8f5c-443e-b9a0-bef9386b23b3",
+            "scaling_group_id": "e5d27f5c-dd76-4a61-b4bc-a67c5686719a",
+            "scaling_policy_name": "fix-time-1",
+            "scaling_policy_type": "SCHEDULED",
+            "scheduled_policy": {
+                "launch_time": "2015-07-24T01:21Z"
+            },
+            "cool_down_time": 300,
+            "scaling_policy_action": {
+                "operation": "REMOVE",
+                "instance_number": 1
+            },
+            "policy_status": "INSERVICE",
+            "create_time": "2015-07-24T01:09:30Z"
+        })
 
     def setUp(self):
         super(AutoScalingV1BaseTestCase, self).setUp()
@@ -114,4 +133,7 @@ class AutoScalingV1BaseTestCase(BaseTestCase):
         )
         self.mocked_config_find = mock.patch.object(
             config_mgr.ConfigManager, "find", return_value=self._config
+        )
+        self.mocked_policy_find = mock.patch.object(
+            policy_mgr.PolicyManager, "find", return_value=self._policy
         )

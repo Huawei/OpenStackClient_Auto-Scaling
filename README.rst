@@ -12,8 +12,7 @@ Currently, We can install the plugin from source code
 
 .. code:: console
 
-    $ git clone https://github.com/Huawei/OpenStackClient_Auto-Scaling
-    python-asclient
+    $ git clone https://github.com/Huawei/OpenStackClient_Auto-Scaling python-asclient
     $ cd python-asclient
     # use python setup.py develop for test purpose
     $ python setup.py install
@@ -86,7 +85,7 @@ Here's an example of listing metric types using Python library with keystone V3 
 
     >>> # Then we can access all AutoScaling API
     >>> client.groups.get()
-    <Group name= ....>
+    <AutoScalingGroup name= ....>
 
 
 .. note::

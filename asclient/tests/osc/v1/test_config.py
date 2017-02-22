@@ -30,7 +30,7 @@ class AutoScalingConfigV1BaseTestCase(base.AutoScalingV1BaseTestCase):
             "tenant_id": "ce061903a53545dcaddb300093b477d2",
             "status": "STANDBY",
             "scaling_configuration_id": "6afe46f9-7d3d-4046-8748-3b2a1085ad86",
-            "scaling_configuration_name": " config_name_1",
+            "scaling_configuration_name": "config_name_1",
             "instance_config": {
                 "disk": [
                     {
@@ -91,7 +91,7 @@ class TestListAutoScalingConfigs(AutoScalingConfigV1BaseTestCase):
         super(TestListAutoScalingConfigs, self).setUp()
         self.cmd = config.ListAutoScalingConfig(self.app, None)
 
-    def test_list_all_quota(self, mock_list, mock_util):
+    def test_list_configs(self, mock_list, mock_util):
         args = [
             "--name", "config-name",
             "--image", "image-name",
@@ -127,7 +127,7 @@ class TestListAutoScalingConfigs(AutoScalingConfigV1BaseTestCase):
         self.assertEquals(resource.AutoScalingConfig.list_column_names,
                           columns)
         expected = [('6afe46f9-7d3d-4046-8748-3b2a1085ad86',
-                     ' config_name_1',
+                     'config_name_1',
                      '37ca2b35-6fc7-47ab-93c7-900324809c5c',
                      '2015-07-23T01:04:07Z'),
                     ('24a8c5f3-c713-4aba-ac29-c17101009e5d',
@@ -142,7 +142,7 @@ class TestShowAutoScalingConfig(base.AutoScalingV1BaseTestCase):
         super(TestShowAutoScalingConfig, self).setUp()
         self.cmd = config.ShowAutoScalingConfig(self.app, None)
 
-    def test_list_all_quota(self):
+    def test_show_config(self):
         args = ["config-name", ]
         verify_args = [
             ("config", "config-name"),
@@ -174,7 +174,7 @@ class TestDeleteAutoScalingConfig(AutoScalingConfigV1BaseTestCase):
         super(TestDeleteAutoScalingConfig, self).setUp()
         self.cmd = config.DeleteAutoScalingConfig(self.app, None)
 
-    def test_list_all_quota(self, mock_create, mock_find):
+    def test_delete_config(self, mock_create, mock_find):
         args = ["config-name-1", "config-name-2"]
         verify_args = [
             ("config", ["config-name-1", "config-name-2"]),
@@ -293,7 +293,7 @@ class TestFindAutoScalingConfig(AutoScalingConfigV1BaseTestCase):
         super(TestFindAutoScalingConfig, self).setUp()
 
     @mock.patch.object(config_mgr.ConfigManager, "_get")
-    def test_find_desktop_with_id(self, mocked):
+    def test_find_config_with_id(self, mocked):
         configs = self.app.client_manager.auto_scaling.configs
         get_return = self._config
         mocked.return_value = get_return
@@ -304,35 +304,23 @@ class TestFindAutoScalingConfig(AutoScalingConfigV1BaseTestCase):
 
     @mock.patch.object(config_mgr.ConfigManager, "_list")
     @mock.patch.object(config_mgr.ConfigManager, "_get")
-    def test_find_desktop_with_name(self, mocked_get, mock_list):
-        configs = self.app.client_manager.workspace.configs
+    def test_find_config_with_name(self, mocked_get, mock_list):
+        configs = self.app.client_manager.auto_scaling.configs
         mocked_get.side_effect = exceptions.ClientException(0)
 
         _list = [resource.AutoScalingConfig(None, c) for c in self._configs]
         mock_list.return_value = br.ListWithMeta(_list, None)
-        find = configs.find("config-1")
-        params = dict(scaling_configuration_name="config-1")
+        find = configs.find("config_name_1")
+        params = dict(scaling_configuration_name="config_name_1")
         mock_list.assert_called_once_with("/scaling_configuration",
                                           key="scaling_configurations",
                                           params=params)
-        self.assertEquals(d, find)
+        self.assertEquals(_list[0], find)
 
-    # @mock.patch.object(config_mgr.ConfigManager, "_list")
-    # @mock.patch.object(config_mgr.ConfigManager, "_get")
-    # def test_find_desktop_with_name_not_unique(self, mocked_get, mock_list):
-    #     configs = self.app.client_manager.workspace.configs
-    #     mocked_get.side_effect = exceptions.ClientException(0)
-    #     mock_list.return_value = self.get_fake_desktop_list(count=2)
-    #     # self.assertRaises(execs.NotUniqueMatch, configs.find, "chen01")
-    #     result = configs.find("chen010")
-    #     expected = self.get_fake_desktop(instance=self.instances[0])
-    #     self.assertEquals(expected, result)
-    #
-    # @mock.patch.object(config_mgr.ConfigManager, "_list")
-    # @mock.patch.object(config_mgr.ConfigManager, "_get")
-    # def test_find_desktop_with_name_no_match(self, mocked_get, mock_list):
-    #     configs = self.app.client_manager.workspace.configs
-    #     mocked_get.side_effect = exceptions.ClientException(0)
-    #     mock_list.return_value = base_resource.ListWithMeta([], None)
-    #     self.assertRaises(exceptions.NotFound, configs.find, "chen01")
-
+    @mock.patch.object(config_mgr.ConfigManager, "_list")
+    @mock.patch.object(config_mgr.ConfigManager, "_get")
+    def test_find_config_with_name_no_match(self, mocked_get, mock_list):
+        configs = self.app.client_manager.auto_scaling.configs
+        mocked_get.side_effect = exceptions.ClientException(0)
+        mock_list.return_value = br.ListWithMeta([], None)
+        self.assertRaises(exceptions.NotFound, configs.find, "config_name_1")
