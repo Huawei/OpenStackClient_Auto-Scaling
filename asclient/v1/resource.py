@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -15,9 +14,10 @@
 #
 import json
 
+from osc_lib import utils as formatter
+
 from asclient.common import display
 from asclient.common import resource
-from osc_lib import utils as formatter
 
 
 class AutoScalingGroup(resource.Resource, display.Display):
@@ -298,5 +298,3 @@ class AutoScalingPolicy(resource.Resource, display.Display):
             instance_number = self.scaling_policy_action["instance_number"]
             return "%s %s" % (operation, instance_number)
         return None
-
-

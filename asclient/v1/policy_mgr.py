@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -18,7 +17,6 @@ from keystoneauth1 import exceptions
 from asclient.common.i18n import _
 from asclient.common import manager
 from asclient.common import utils
-from asclient.common.i18n import _
 from asclient.v1 import resource
 
 
@@ -52,7 +50,8 @@ class PolicyManager(manager.Manager):
                     "'%s' exists.") % id_or_name
         raise exceptions.NotFound(message)
 
-    def list(self, as_group_id, name=None, type_=None, limit=None, offset=None):
+    def list(self, as_group_id, name=None, type_=None, limit=None,
+             offset=None):
         """list policy for auto scaling group
 
         :param as_group_id:

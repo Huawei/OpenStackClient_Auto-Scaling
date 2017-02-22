@@ -29,7 +29,6 @@ from asclient.v1 import policy_mgr
 from asclient.v1 import quota_mgr
 
 
-
 # fake request id
 FAKE_REQUEST_ID = 'req-0594c66b-6973-405c-ae2c-43fcfc00f2e3'
 
@@ -132,4 +131,3 @@ class FakeAutoScalingV1Client(object):
         self.instances = instance_mgr.InstanceManager(self.client)
         self.logs = log_mgr.LogManager(self.client)
         self.quotas = quota_mgr.QuotaManager(self.client)
-

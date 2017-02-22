@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -13,9 +12,10 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
+from osc_lib.cli import parseractions
+
 from asclient.common import parsetypes
 from asclient.common.i18n import _
-from osc_lib.cli import parseractions
 
 
 class Group(object):
@@ -476,12 +476,12 @@ class Policy(object):
             type=parsetypes.recurrence_type,
             help=_("Recurrence type contains ['Daily', 'Weekly', 'Monthly']. "
                    "When type is Daily, value should be HH:ss "
-                   "(example: Daily:18:00 means schedule at Everyday's 18:00); "
-                   "When type is Weekly, value should be 1-7 (example: "
+                   "(example: Daily:18:00 means schedule at Everyday's 18:00);"
+                   " When type is Weekly, value should be 1-7 (example: "
                    "Weekly:1,3 means schedule at Every Sunday,Wednesday); "
                    "When type is Monthly, value should be 1-31 (example: "
-                   "Monthly:1,10,20 means schedule at 1,10,20 of Every Month), "
-                   "(Effect only when policy-type is RECURRENCE)"
+                   "Monthly:1,10,20 means schedule at 1,10,20 of Every Month),"
+                   " (Effect only when policy-type is RECURRENCE)"
                    ),
         )
 

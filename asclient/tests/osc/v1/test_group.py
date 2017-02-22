@@ -37,7 +37,8 @@ class AutoScalingGroupV1BaseTestCase(base.AutoScalingV1BaseTestCase):
                 "scaling_group_name": "Woo-Test-1",
                 "scaling_group_id": "f5da912c-4525-4edf-b418-cc1c8e077298",
                 "scaling_group_status": "PAUSED",
-                "scaling_configuration_id": "498c242b-54a4-48ec-afcd-bc21dd612b57",
+                "scaling_configuration_id":
+                    "498c242b-54a4-48ec-afcd-bc21dd612b57",
                 "scaling_configuration_name": "as-config-TEO",
                 "current_instance_number": 0,
                 "desire_instance_number": 1,
@@ -72,7 +73,8 @@ class AutoScalingGroupV1BaseTestCase(base.AutoScalingV1BaseTestCase):
                 "scaling_group_name": "as-group-teo",
                 "scaling_group_id": "ac8acbb4-e6ce-4890-a9f2-d8712b3d7385",
                 "scaling_group_status": "INSERVICE",
-                "scaling_configuration_id": "498c242b-54a4-48ec-afcd-bc21dd612b57",
+                "scaling_configuration_id":
+                    "498c242b-54a4-48ec-afcd-bc21dd612b57",
                 "scaling_configuration_name": "as-config-TEO",
                 "current_instance_number": 2,
                 "desire_instance_number": 2,

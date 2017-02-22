@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
 #   Licensed under the Apache License, Version 2.0 (the "License"); you may
 #   not use this file except in compliance with the License. You may obtain
 #   a copy of the License at
@@ -15,13 +14,14 @@
 #
 import base64
 
+from keystoneauth1 import exceptions
 import six
+
 from asclient.common import exceptions as execs
 from asclient.common import manager
 from asclient.common import utils
 from asclient.common.i18n import _
 from asclient.v1 import resource
-from keystoneauth1 import exceptions
 
 
 class ConfigManager(manager.Manager):

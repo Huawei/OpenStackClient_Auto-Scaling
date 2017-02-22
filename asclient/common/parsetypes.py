@@ -61,7 +61,7 @@ def volume_type(user_input=''):
             raise ValueError
         _volume_type = string.upper(volume[0])
         volume_size = int(volume[1])
-        if _volume_type not in ['SSD', 'SATA', 'SAS',]:
+        if _volume_type not in ['SSD', 'SATA', 'SAS']:
             raise ValueError
         return dict(volume_type=_volume_type, size=volume_size)
     except ValueError:
