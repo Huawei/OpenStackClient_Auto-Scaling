@@ -225,7 +225,7 @@ class TestDeleteAutoScalingPolicy(AutoScalingPolicyV1BaseTestCase):
         super(TestDeleteAutoScalingPolicy, self).setUp()
         self.cmd = policy.DeleteAutoScalingPolicy(self.app, None)
 
-    def test_list_all_quota(self, mock_create):
+    def test_delete_policy(self, mock_create):
         args = ["policy-name-1"]
         verify_args = [
             ("policy", "policy-name-1"),

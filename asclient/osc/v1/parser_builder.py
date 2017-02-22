@@ -53,12 +53,12 @@ class Group(object):
         )
 
     @staticmethod
-    def add_security_group_opt(parser):
+    def add_security_group_opt(parser, required=True):
         parser.add_argument(
             "--security-group",
             metavar="<security-group>",
             default=[],
-            required=True,
+            required=required,
             dest="security_groups",
             action='append',
             help=_('Security group to assign to the instance (ID or name, '
