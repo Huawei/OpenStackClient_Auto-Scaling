@@ -67,7 +67,7 @@ Here's an example of listing metric types using Python library with keystone V3 
 
     >>> from keystoneauth1 import session
     >>> from keystoneauth1 import client
-    >>> from cloudeyeclient.v1 import client
+    >>> from asclient.v1 import client
 
     >>> # Use Keystone API v3 for authentication as example
     >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
@@ -84,7 +84,7 @@ Here's an example of listing metric types using Python library with keystone V3 
     >>> client = client.Client(session=session)
 
     >>> # Then we can access all AutoScaling API
-    >>> client.groups.get()
+    >>> client.groups.get(group_id)
     <AutoScalingGroup name= ....>
 
 

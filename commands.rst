@@ -53,13 +53,29 @@ Configuration Commands
 Group Commands
 ==================
 
-1. group create()::
-    $ openstack as group create Woo-Test-1 --network=f5ebe00f-3ac1-4ec5-9175-090d9d43e4ef
+1. group create(创建弹性伸缩组)::
+
+    $ openstack as group create Woo-Test-1 --vpc=f5ebe00f-3ac1-4ec5-9175-090d9d43e4ef
     --subnet=60a86b97-1501-4d89-949c-25a49c5c3c31 --security-group=d3e2e1ad-b7f2-414c-9b5a-2d485686a96a
     --config=as-config-TEO --desire-instance=1 --max-instance=3 --min-instance=1
     --cool-down=900 --lb-listener=038a1208f15b47ab8c2f5f4238c9e783
     --health-periodic-audit-time=15 --health-periodic-audit-method=ELB_AUDIT
     --instance-terminate-policy=OLD_CONFIG_OLD_INSTANCE --delete-public-ip  --debug
+    Group xxx created
+
+
+#. group edit(编辑弹性伸缩组)::
+
+    $ openstack as group edit group-id --name=changed-name
+    --subnet=60a86b97-1501-4d89-949c-25a49c5c3c31
+    --security-group=d3e2e1ad-b7f2-414c-9b5a-2d485686a96a
+    --config=as-config-TEO --desire-instance=1 --max-instance=3 --min-instance=1
+    --cool-down=900 --lb-listener=038a1208f15b47ab8c2f5f4238c9e783
+    --health-periodic-audit-time=15 --health-periodic-audit-method=ELB_AUDIT
+    --instance-terminate-policy=OLD_CONFIG_OLD_INSTANCE --delete-public-ip  --debug
+    Group xxx modified
+
+
 
 #. group list(查询弹性伸缩组列表)::
 
@@ -174,7 +190,7 @@ Policy Commands
     +--------------------------------------+----------------+-------------+-------------+----------------+-----------+
 
 
-#. policy show()::
+#. policy show(查询弹性伸缩策略详情)::
 
     $ openstack as policy show 81c5051a-cb1d-4993-b036-3d3afc6c9648
     +------------------+--------------------------------------+
