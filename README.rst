@@ -12,8 +12,7 @@ Currently, We can install the plugin from source code
 
 .. code:: console
 
-    $ git clone https://github.com/Huawei/OpenStackClient_Auto-Scaling
-    python-asclient
+    $ git clone https://github.com/Huawei/OpenStackClient_Auto-Scaling python-asclient
     $ cd python-asclient
     # use python setup.py develop for test purpose
     $ python setup.py install
@@ -68,7 +67,7 @@ Here's an example of listing metric types using Python library with keystone V3 
 
     >>> from keystoneauth1 import session
     >>> from keystoneauth1 import client
-    >>> from cloudeyeclient.v1 import client
+    >>> from asclient.v1 import client
 
     >>> # Use Keystone API v3 for authentication as example
     >>> auth = identity.v3.Password(auth_url=u'http://localhost:5000/v3',
@@ -85,8 +84,8 @@ Here's an example of listing metric types using Python library with keystone V3 
     >>> client = client.Client(session=session)
 
     >>> # Then we can access all AutoScaling API
-    >>> client.groups.get()
-    <Group name= ....>
+    >>> client.groups.get(group_id)
+    <AutoScalingGroup name= ....>
 
 
 .. note::

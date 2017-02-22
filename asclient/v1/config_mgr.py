@@ -149,4 +149,4 @@ class ConfigManager(manager.Manager):
             "scaling_configuration_name": name,
             "instance_config": config
         }
-        return self._create("/scaling_configuration", json=json, raw=True)
+        return self._create("/scaling_configuration", json=json)

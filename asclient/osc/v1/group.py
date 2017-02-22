@@ -167,7 +167,8 @@ class ListAutoScalingGroup(command.Lister):
                                 as_config_id=config_id, limit=args.limit,
                                 offset=args.offset)
         columns = resource.AutoScalingGroup.list_column_names
-        return columns, (g.get_display_data(columns) for g in groups)
+        output = [g.get_display_data(columns) for g in groups]
+        return columns, output
 
 
 class ShowAutoScalingGroup(command.ShowOne):

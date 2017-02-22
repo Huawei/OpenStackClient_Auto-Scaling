@@ -61,8 +61,6 @@ class RemoveAutoScalingInstance(command.Command):
     def take_action(self, args):
         mgr = self.app.client_manager.auto_scaling.instances
 
-        # TODO(woo) do we need to verify instance
-        #            and support instance name input
         as_groups_mgr = self.app.client_manager.auto_scaling.groups
         group_id = as_groups_mgr.find(args.group).id
         instances = mgr.list(group_id)
@@ -84,8 +82,7 @@ class RemoveAutoScalingInstance(command.Command):
                 msg = 'Instance with id or name "%s" is not belong to Group %s'
                 raise exceptions.CommandError(msg % (id_or_name, group_id))
 
-        mgr.remove_instances(group_id, instance_id_list,
-                             delete_instance=args.delete)
+        mgr.remove_instances(group_id, converted, delete_instance=args.delete)
         return 'done'
 
 
@@ -95,8 +92,7 @@ class AddAutoScalingInstance(command.Command):
     def get_parser(self, prog_name):
         parser = super(AddAutoScalingInstance, self).get_parser(prog_name)
         pb.Instance.add_group_opt(parser)
-        pb.Instance.add_instances_opt(parser, 'removed')
-        pb.Instance.add_delete_instance_opt(parser)
+        pb.Instance.add_instances_opt(parser, 'added')
         return parser
 
     def take_action(self, args):

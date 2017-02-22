@@ -21,6 +21,13 @@ from asclient.common import display
 from asclient.common import manager
 from asclient.common import resource as r
 from asclient.common import utils
+from asclient.v1 import config_mgr
+from asclient.v1 import group_mgr
+from asclient.v1 import instance_mgr
+from asclient.v1 import log_mgr
+from asclient.v1 import policy_mgr
+from asclient.v1 import quota_mgr
+
 
 
 # fake request id
@@ -115,7 +122,14 @@ class FakeHTTPResponse(object):
         return jsonutils.loads(self.content)
 
 
-class FakeWorkspaceV1Client(object):
+class FakeAutoScalingV1Client(object):
 
-    def __init__(self, **kwargs):
+    def __init__(self):
         self.client = mock.Mock()
+        self.configs = config_mgr.ConfigManager(self.client)
+        self.groups = group_mgr.GroupManager(self.client)
+        self.policies = policy_mgr.PolicyManager(self.client)
+        self.instances = instance_mgr.InstanceManager(self.client)
+        self.logs = log_mgr.LogManager(self.client)
+        self.quotas = quota_mgr.QuotaManager(self.client)
+

@@ -88,7 +88,7 @@ class EditAutoScalingPolicy(command.Command):
 
     def take_action(self, args):
         policies = self.app.client_manager.auto_scaling.policies
-
+        policy = policies.find(args.policy)
         kwargs = {
             "type_": args.type,
             "name": args.name,
@@ -103,7 +103,7 @@ class EditAutoScalingPolicy(command.Command):
             kwargs.update(args.action)
         if args.recurrence:
             kwargs.update(args.recurrence)
-        policies.edit(args.policy, **kwargs)
+        policies.edit(policy.id, **kwargs)
         return "done"
 
 
@@ -128,7 +128,7 @@ class ListAutoScalingPolicy(command.Lister):
                                    offset=args.offset, limit=args.limit)
 
         columns = resource.AutoScalingPolicy.list_column_names
-        data = (p.get_display_data(columns) for p in policies)
+        data = [p.get_display_data(columns) for p in policies]
         return columns, data
 
 

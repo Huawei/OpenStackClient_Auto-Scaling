@@ -12,9 +12,7 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
-
 import io
-import logging
 
 from osc_lib import exceptions
 from osc_lib import utils
@@ -91,10 +89,8 @@ class CreateAutoScalingConfig(command.Command):
             "admin_pwd": args.admin_pass,
         }
 
-        logging.info(kwargs)
-
         config = mgr.create(args.name, **kwargs)
-        return "Configuration %s created" % config["scaling_configuration_id"]
+        return "Configuration %s created" % config.id
 
 
 class ListAutoScalingConfig(command.Lister):
@@ -121,7 +117,7 @@ class ListAutoScalingConfig(command.Lister):
                            offset=args.offset, limit=args.limit)
 
         columns = resource.AutoScalingConfig.list_column_names
-        output = (c.get_display_data(columns) for c in configs)
+        output = [c.get_display_data(columns) for c in configs]
         return columns, output
 
 
@@ -135,7 +131,7 @@ class ShowAutoScalingConfig(command.ShowOne):
 
     def take_action(self, args):
         mgr = self.app.client_manager.auto_scaling.configs
-        configs = mgr.find(id_or_name=args.config)
+        configs = mgr.find(args.config)
         columns = resource.AutoScalingConfig.show_column_names
         formatter = resource.AutoScalingConfig.formatter
         output = configs.get_display_data(columns, formatter=formatter)
@@ -158,7 +154,6 @@ class DeleteAutoScalingConfig(command.Command):
 
     def take_action(self, args):
         mgr = self.app.client_manager.auto_scaling.configs
-        config_ids = [mgr.find(id_or_name=config_id).id
-                      for config_id in args.config]
+        config_ids = [mgr.find(config_id).id for config_id in args.config]
         mgr.delete(config_ids)
         return "done"
