@@ -122,7 +122,7 @@ Group Commands
     $ openstack as group pause as-group-teo
     done
 
-#. group delete(停止弹性伸缩组)::
+#. group delete(删除弹性伸缩组)::
 
     $ openstack as group delete as-group-teo
     done
