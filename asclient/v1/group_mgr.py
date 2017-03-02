@@ -166,4 +166,4 @@ class GroupManager(manager.Manager):
         :param group_id:
         :return:
         """
-        return self._delete("/scaling_group/" + group_id, raw=True)
+        return self._delete("/scaling_group/" + group_id)
