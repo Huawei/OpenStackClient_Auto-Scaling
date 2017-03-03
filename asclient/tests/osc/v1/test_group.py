@@ -295,7 +295,7 @@ class TestDeleteAutoScalingGroup(AutoScalingGroupV1BaseTestCase):
             result = self.cmd.take_action(args)
             find.assert_called_once_with(args.group)
             mock_create.assert_called_once_with(
-                "/scaling_group/" + self._group.id, raw=True
+                "/scaling_group/" + self._group.id
             )
             self.assertEquals('done', result)
 

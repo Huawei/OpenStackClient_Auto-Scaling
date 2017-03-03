@@ -46,7 +46,7 @@ class PolicyManager(manager.Manager):
         # elif matched_number == 1:
         #     return results[0]
 
-        message = _("No Auto Scaling Group with ID or name of "
+        message = _("No Auto Scaling Policy with ID of "
                     "'%s' exists.") % id_or_name
         raise exceptions.NotFound(message)
 

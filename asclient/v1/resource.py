@@ -14,6 +14,7 @@
 #
 import json
 
+import six
 from osc_lib import utils as formatter
 
 from asclient.common import display
@@ -230,6 +231,21 @@ class AutoScalingQuota(resource.Resource, display.Display):
     ]
 
 
+def format_schedule_policy(schedule):
+    ordered = [
+        "recurrence_type",
+        "recurrence_value",
+        "launch_time",
+        "start_time",
+        "end_time",
+    ]
+    output = ""
+    for s in ordered:
+        if s in schedule:
+            output = output + s + "='" + six.text_type(schedule[s]) + "', "
+    return output[:-2]
+
+
 class AutoScalingPolicy(resource.Resource, display.Display):
     """AutoScaling policy resource instance"""
 
@@ -242,17 +258,6 @@ class AutoScalingPolicy(resource.Resource, display.Display):
         "Trigger Action",
         "Status",
     ]
-
-    #
-    #     "scheduled_policy": {
-    #         "launch_time": "2015-07-24T01:21Z"
-    #     },
-    #     "scaling_policy_action": {
-    #         "operation": "REMOVE",
-    #         "instance_number": 1
-    #     },
-    #     "create_time": "2015-07-24T01:09:30Z"
-    # }
 
     show_column_names = [
         "Group Id",
@@ -276,7 +281,7 @@ class AutoScalingPolicy(resource.Resource, display.Display):
     }
 
     formatter = {
-        "Scheduled Policy": formatter.format_dict,
+        "Scheduled Policy": format_schedule_policy,
     }
 
     @property
