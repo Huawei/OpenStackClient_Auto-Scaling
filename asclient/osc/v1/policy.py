@@ -12,11 +12,13 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
+import argparse
 import logging
 
 from osc_lib.command import command
 
 from asclient.common import parser_builder as bpb
+from asclient.common import parsetypes
 from asclient.common.i18n import _
 from asclient.osc.v1 import parser_builder as pb
 from asclient.v1 import resource
@@ -36,8 +38,10 @@ class CreateAutoScalingPolicy(command.Command):
                                       required=True)
         pb.Policy.add_cool_down_opt(parser)
         pb.Policy.add_alarm_id_opt(parser)
+        # pb.Policy.add_recurrence_opt(parser)
+        pb.Policy.add_recurrence_type_opt(parser)
+        pb.Policy.add_recurrence_value_opt(parser)
         pb.Policy.add_launch_time_opt(parser)
-        pb.Policy.add_recurrence_opt(parser)
         pb.Policy.add_start_time_opt(parser)
         pb.Policy.add_end_time_opt(parser)
         pb.Policy.add_action_opt(parser)
@@ -45,22 +49,34 @@ class CreateAutoScalingPolicy(command.Command):
         return parser
 
     def take_action(self, args):
+
         groups = self.app.client_manager.auto_scaling.groups
         policies = self.app.client_manager.auto_scaling.policies
+
+        launch_time = args.launch_time
+        # validate launch time
+        if args.type == 'RECURRENCE':
+            parse = parsetypes.date_type('%H:%M')
+            parse(args.launch_time)
+        elif args.type == 'SCHEDULED':
+            parse = parsetypes.date_type('%Y-%m-%dT%H:%M')
+            parse(args.launch_time)
+            launch_time += 'Z'
 
         group_id = groups.find(args.group).id
         kwargs = {
             "alarm_id": args.alarm_id,
-            "launch_time": args.launch_time,
             "start_time": args.start_time,
             "end_time": args.end_time,
             "cool_down": args.cool_down,
+            "recurrence_type": args.recurrence_type,
+            "recurrence_value": args.recurrence_value,
+            "launch_time": launch_time,
         }
 
         if args.action:
             kwargs.update(args.action)
-        if args.recurrence:
-            kwargs.update(args.recurrence)
+
         created = policies.create(group_id, args.name, args.type, **kwargs)
         return "Policy %s created" % created.id
 
@@ -79,8 +95,9 @@ class EditAutoScalingPolicy(command.Command):
                                       required=False)
         pb.Policy.add_cool_down_opt(parser)
         pb.Policy.add_alarm_id_opt(parser)
+        pb.Policy.add_recurrence_type_opt(parser)
+        pb.Policy.add_recurrence_value_opt(parser)
         pb.Policy.add_launch_time_opt(parser)
-        pb.Policy.add_recurrence_opt(parser)
         pb.Policy.add_start_time_opt(parser)
         pb.Policy.add_end_time_opt(parser)
         pb.Policy.add_action_opt(parser)
@@ -89,20 +106,31 @@ class EditAutoScalingPolicy(command.Command):
     def take_action(self, args):
         policies = self.app.client_manager.auto_scaling.policies
         policy = policies.find(args.policy)
+
+        launch_time = args.launch_time
+        # validate launch time
+        if args.type == 'RECURRENCE':
+            parse = parsetypes.date_type('%H:%M')
+            parse(args.launch_time)
+        elif args.type == 'SCHEDULED':
+            parse = parsetypes.date_type('%Y-%m-%dT%H:%M')
+            parse(args.launch_time)
+            launch_time += 'Z'
+
         kwargs = {
             "type_": args.type,
             "name": args.name,
             "alarm_id": args.alarm_id,
-            "launch_time": args.launch_time,
+            "launch_time": launch_time,
             "start_time": args.start_time,
             "end_time": args.end_time,
+            "recurrence_type": args.recurrence_type,
+            "recurrence_value": args.recurrence_value,
             "cool_down": args.cool_down,
         }
 
         if args.action:
             kwargs.update(args.action)
-        if args.recurrence:
-            kwargs.update(args.recurrence)
         policies.edit(policy.id, **kwargs)
         return "done"
 

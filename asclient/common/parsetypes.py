@@ -105,21 +105,20 @@ def policy_action_type(user_input=''):
         msg = _("%s is not a valid policy action") % user_input
         raise argparse.ArgumentTypeError(msg)
 
-
 # noinspection PyTypeChecker
-def recurrence_type(user_input=''):
-    try:
-        split = user_input.split(':', 1)
-        if len(split) != 2:
-            raise ValueError
-        type_ = split[0]
-        value = split[1]
-        # ok, let server validate the user input
-        # if type_ not in ['Daily', 'Weekly', 'Monthly']:
-        #     msg = _("Recurrence type must be one of "
-        #             "('Daily', 'Weekly', 'Monthly')")
-        #     raise argparse.ArgumentTypeError(msg)
-        return dict(recurrence_type=type_, recurrence_value=value)
-    except ValueError:
-        msg = _("%s is not a valid policy action") % user_input
-        raise argparse.ArgumentTypeError(msg)
+# def recurrence_type(user_input=''):
+#     try:
+#         split = user_input.split(':', 1)
+#         if len(split) != 2:
+#             raise ValueError
+#         type_ = split[0]
+#         value = split[1]
+#         # ok, let server validate the user input
+#         # if type_ not in ['Daily', 'Weekly', 'Monthly']:
+#         #     msg = _("Recurrence type must be one of "
+#         #             "('Daily', 'Weekly', 'Monthly')")
+#         #     raise argparse.ArgumentTypeError(msg)
+#         return dict(recurrence_type=type_, recurrence_value=value)
+#     except ValueError:
+#         msg = _("%s is not a valid policy action") % user_input
+#         raise argparse.ArgumentTypeError(msg)

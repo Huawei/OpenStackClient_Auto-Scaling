@@ -461,10 +461,12 @@ class Policy(object):
         parser.add_argument(
             '--launch-time',
             required=required,
-            metavar="<yyyy-MM-ddTHH:mm>",
-            type=parsetypes.date_type('%Y-%m-%dT%H:%M'),
-            help=_("Schedule launch time"
-                   "(Only Effect when policy-type is SCHEDULED)"),
+            metavar="<timestamp|time>",
+            help=_("Required when policy-type is SCHEDULED or RECURRENCE, "
+                   "When policy-type is SCHEDULED, value should be a "
+                   "UTC timestamp with format <yyyy-MM-ddTHH:mm>; "
+                   "When policy-type is RECURRENCE, value should be time "
+                   "with format HH:mm"),
         )
 
     @staticmethod
@@ -482,6 +484,32 @@ class Policy(object):
                    "When type is Monthly, value should be 1-31 (example: "
                    "Monthly:1,10,20 means schedule at 1,10,20 of Every Month),"
                    " (Effect only when policy-type is RECURRENCE)"
+                   ),
+        )
+
+    @staticmethod
+    def add_recurrence_type_opt(parser, required=False):
+        parser.add_argument(
+            '--recurrence-type',
+            required=required,
+            choices=['Daily', 'Weekly', 'Monthly'],
+            help=_("Effect only when policy-type is RECURRENCE. "
+                   "Recurrence-value and recurrence-type are used in pairs, "
+                   "if recurrence type presents, make sure recurrence value "
+                   "has a right value."),
+        )
+
+    @staticmethod
+    def add_recurrence_value_opt(parser, required=False):
+        parser.add_argument(
+            '--recurrence-value',
+            required=required,
+            help=_("Effects only When recurrence type "
+                   "is Weekly or Monthly. When Weekly, value should be a list "
+                   "contains 1-7 (example: 1,3 means schedule at Every "
+                   "Sunday,Wednesday); When Monthly, value should be a list "
+                   "contains 1-31,(example: Monthly:1,10,20 means schedule at "
+                   "the first, 10th, 20th day of Every Month)"
                    ),
         )
 

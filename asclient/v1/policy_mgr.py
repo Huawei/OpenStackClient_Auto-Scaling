@@ -119,10 +119,8 @@ class PolicyManager(manager.Manager):
         str_fmt = "%Y-%m-%dT%H:%MZ"
         start_time_str = start_time.strftime(str_fmt) if start_time else None
         end_time_str = end_time.strftime(str_fmt) if end_time else None
-        launch_time = launch_time.strftime(str_fmt) if launch_time else None
 
         if recurrence_type == 'Daily':
-            launch_time = recurrence_value
             recurrence_value = None
 
         json = utils.remove_empty_from_dict({
@@ -182,10 +180,8 @@ class PolicyManager(manager.Manager):
         str_fmt = "%Y-%m-%dT%H:%MZ"
         start_time_str = start_time.strftime(str_fmt) if start_time else None
         end_time_str = end_time.strftime(str_fmt) if end_time else None
-        launch_time = launch_time.strftime(str_fmt) if launch_time else None
 
         if recurrence_type == 'Daily':
-            launch_time = recurrence_value
             recurrence_value = None
 
         json = utils.remove_empty_from_dict({

@@ -165,7 +165,12 @@ Policy Commands
 
     $ openstack as policy create WooTest --action=ADD:1 --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
         --type=RECURRENCE --start-time=2017-02-19T14:00 --end-time=2017-02-28T23:00
-        --recurrence=Daily:12:00 --action=SET:1
+        --recurrence-type=Daily --launch-time=12:00 --action=SET:1
+    Policy e0eb7de0-aa5b-435c-8d4c-46867fdf087d created
+
+    $ openstack as policy create WooTest --action=ADD:1 --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
+        --type=RECURRENCE --start-time=2017-02-19T14:00 --end-time=2017-02-28T23:00
+        --recurrence-type=Monthly --recurrence-value=1,10,20 --launch-time=12:00 --action=SET:1
     Policy e0eb7de0-aa5b-435c-8d4c-46867fdf087d created
 
 #. policy edit(修改弹性伸缩策略)::
