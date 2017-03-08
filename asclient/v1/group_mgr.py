@@ -33,7 +33,7 @@ class GroupManager(manager.Manager):
                health_periodic_audit_time=None,
                health_periodic_audit_method=None,
                instance_terminate_policy=None, delete_public_ip=None,
-               notifications=None, availability_zones=None):
+               notifications=None, available_zones=None):
         """create new auto scaling group"""
         json = utils.remove_empty_from_dict({
             "scaling_group_name": name,
@@ -51,7 +51,7 @@ class GroupManager(manager.Manager):
             "instance_terminate_policy": instance_terminate_policy,
             "notifications": notifications,
             "delete_publicip": delete_public_ip,
-            "availability_zones": availability_zones,
+            "available_zones": available_zones,
         })
         return self._create("/scaling_group", json=json)
 
