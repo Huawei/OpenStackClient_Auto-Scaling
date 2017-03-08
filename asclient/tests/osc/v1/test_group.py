@@ -407,7 +407,9 @@ class TestEditAutoScalingGroup(AutoScalingGroupV1BaseTestCase):
             "--health-periodic-audit-method", "ELB_AUDIT",
             "--health-periodic-audit-time", "5",
             "--instance-terminate-policy", "OLD_CONFIG_OLD_INSTANCE",
-            "--delete-public-ip"
+            "--delete-public-ip",
+            "--available-zone", "eu-de-01",
+            "--available-zone", "eu-de-02",
         ]
 
         verify_args = [
@@ -425,6 +427,7 @@ class TestEditAutoScalingGroup(AutoScalingGroupV1BaseTestCase):
             ("health_periodic_audit_time", 5),
             ("instance_terminate_policy", "OLD_CONFIG_OLD_INSTANCE"),
             ("delete_public_ip", True),
+            ("available_zones", ["eu-de-01", "eu-de-02"]),
         ]
         args = self.check_parser(self.cmd, args, verify_args)
         network_client = self.app.client_manager.network
@@ -456,6 +459,7 @@ class TestEditAutoScalingGroup(AutoScalingGroupV1BaseTestCase):
                 'lb_listener_id': 'lb-listener-1',
                 'cool_down_time': 60,
                 'delete_publicip': True,
+                'available_zones': ["eu-de-01", "eu-de-02"],
             }
             mock_update.assert_called_once_with(
                 "/scaling_group/" + self._group.id, json=json)

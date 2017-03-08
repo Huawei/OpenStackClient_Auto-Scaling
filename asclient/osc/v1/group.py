@@ -106,8 +106,7 @@ class EditAutoScalingGroup(command.Command):
         pb.Group.add_health_periodic_audit_time_arg(parser)
         pb.Group.add_instance_terminate_policy_opt(parser)
         pb.Group.add_del_public_ip_opt(parser)
-        # TODO  availability_zones
-        # TODO notifications
+        pb.Group.add_az_opt(parser)
         return parser
 
     def take_action(self, args):
@@ -141,7 +140,8 @@ class EditAutoScalingGroup(command.Command):
             "health_periodic_audit_time": args.health_periodic_audit_time,
             "health_periodic_audit_method": args.health_periodic_audit_method,
             "instance_terminate_policy": args.instance_terminate_policy,
-            "delete_public_ip": args.delete_public_ip
+            "delete_public_ip": args.delete_public_ip,
+            "available_zones": args.available_zones
         }
         group = groups.edit(group_id, **kwargs)
 
