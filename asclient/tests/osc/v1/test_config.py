@@ -245,9 +245,9 @@ class TestCreateAutoScalingConfig(AutoScalingConfigV1BaseTestCase):
                     'eip': {
                         'ip_type': '5_telcom',
                         'bandwidth': {
-                            'bandwidth_charging_mode': 'traffic',
-                            'bandwidth_share_type': 'traffic',
-                            'bandwidth_size': 5
+                            'charging_mode': 'traffic',
+                            'share_type': 'traffic',
+                            'size': 5
                         }
                     }
                 },
