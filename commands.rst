@@ -20,7 +20,8 @@ Configuration Commands
     # create from flavor image
     $ openstack as config create woo-config-2 --image=2e53e766-2315-4c9e-9e93-561b3405ef6e --flavor=h1.large --root-volume=SSD:40
         --data-volume=SSD:40 --data-volume=SATA:120 --metadata=key1=value1 --metadata=key2=value2
-        --key-name=woo_test --file=/etc/1.txt=c:\\1.txt --file=/etc/2.txt=c:\\2.txt
+        --key-name=woo_test --file=/etc/1.txt=c:\\1.txt --file=/etc/2.txt=c:\\2.txt --ip-type=5_telcom
+        --bandwidth-size=5 --bandwidth-share-type=PER --bandwidth-charging-mode=traffic --userdata=file:///root/run.sh
     Configuration 875ae9c0-0770-41fd-9d08-a02e6c5521aa created
 
 
@@ -60,7 +61,8 @@ Group Commands
     --config=as-config-TEO --desire-instance=1 --max-instance=3 --min-instance=1
     --cool-down=900 --lb-listener=038a1208f15b47ab8c2f5f4238c9e783
     --health-periodic-audit-time=15 --health-periodic-audit-method=ELB_AUDIT
-    --instance-terminate-policy=OLD_CONFIG_OLD_INSTANCE --delete-public-ip  --debug
+    --instance-terminate-policy=OLD_CONFIG_OLD_INSTANCE --delete-public-ip
+    --available-zone=xxxx --available-zone=xxxx2
     Group xxx created
 
 
@@ -72,7 +74,8 @@ Group Commands
     --config=as-config-TEO --desire-instance=1 --max-instance=3 --min-instance=1
     --cool-down=900 --lb-listener=038a1208f15b47ab8c2f5f4238c9e783
     --health-periodic-audit-time=15 --health-periodic-audit-method=ELB_AUDIT
-    --instance-terminate-policy=OLD_CONFIG_OLD_INSTANCE --delete-public-ip  --debug
+    --instance-terminate-policy=OLD_CONFIG_OLD_INSTANCE --delete-public-ip
+    --available-zone=xxxx --available-zone=xxxx2
     Group xxx modified
 
 
