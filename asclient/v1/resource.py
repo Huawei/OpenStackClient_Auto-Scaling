@@ -28,6 +28,7 @@ class AutoScalingGroup(resource.Resource, display.Display):
         "Security Groups": formatter.format_list_of_dicts,
         "Notifications": formatter.format_list,
         "Networks": formatter.format_list_of_dicts,
+        "Available Zones": formatter.format_list,
     }
 
     show_column_names = [
@@ -46,7 +47,7 @@ class AutoScalingGroup(resource.Resource, display.Display):
         "Instance Terminate Policy",
         "Scaling",
         "Delete Public IP",
-        "Notifications",
+        "Available Zones",
         "Create Time",
         "Status",
     ]

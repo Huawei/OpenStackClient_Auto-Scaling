@@ -227,7 +227,7 @@ class TestShowAutoScalingGroup(AutoScalingGroupV1BaseTestCase):
                         'OLD_CONFIG_OLD_INSTANCE',
                         True,
                         False,
-                        'EMAIL',
+                        '',
                         '2015-09-01T08:36:10Z',
                         'INSERVICE')
             self.assertEquals(expected, data)
