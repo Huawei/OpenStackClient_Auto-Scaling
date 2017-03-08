@@ -160,9 +160,9 @@ class AutoScalingConfig(resource.Resource, display.Display):
     def image(self):
         return self.instance_config["imageRef"]
 
-        # @property
-        # def user_data(self):
-        #     return self.instance_config["user_data"]
+    # @property
+    # def user_data(self):
+    #     return self.instance_config["user_data"]
 
 
 class AutoScalingInstance(resource.Resource, display.Display):
