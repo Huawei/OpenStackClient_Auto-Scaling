@@ -246,7 +246,7 @@ class TestCreateAutoScalingConfig(AutoScalingConfigV1BaseTestCase):
                         'ip_type': '5_telcom',
                         'bandwidth': {
                             'charging_mode': 'traffic',
-                            'share_type': 'traffic',
+                            'share_type': 'PER',
                             'size': 5
                         }
                     }
