@@ -142,9 +142,9 @@ class ConfigManager(manager.Manager):
                 })
 
         bandwidth = utils.remove_empty_from_dict({
-            "bandwidth_size": bandwidth_size,
-            "bandwidth_share_type": bandwidth_share_type,
-            "bandwidth_charging_mode": bandwidth_charging_mode,
+            "size": bandwidth_size,
+            "share_type": bandwidth_share_type,
+            "charging_mode": bandwidth_charging_mode,
         })
         eip = utils.remove_empty_from_dict({
             "ip_type": ip_type,

@@ -54,7 +54,7 @@ class CreateAutoScalingGroup(command.Command):
 
         # manager
         groups = auto_scaling.groups
-        configs = auto_scaling.configs
+        configs = auto_scaling.configsconfig
 
         vpc_id = network.find_router(args.vpc, ignore_missing=False).id
         subnets = [network.find_subnet(subnet, ignore_missing=False).network_id
