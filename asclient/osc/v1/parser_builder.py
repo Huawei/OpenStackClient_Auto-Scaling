@@ -369,9 +369,12 @@ class Config(object):
         parser.add_argument(
             '--userdata',
             required=False,
+            metavar='<blob>',
             type=parsetypes.blob_or_filepath,
             help=_('User data to be cloud initialed (support when cloud-init '
-                   'is enabled)'),
+                   "is enabled), Could be blob (blob-text) "
+                   "or file-path (file://absolute-path), if file-path, "
+                   "will read file content as blob."),
         )
 
     @staticmethod
