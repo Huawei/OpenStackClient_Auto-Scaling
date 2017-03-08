@@ -19,7 +19,6 @@ from asclient.common.i18n import _
 
 
 class Group(object):
-
     @staticmethod
     def add_group_name_arg(parser):
         parser.add_argument(
@@ -319,6 +318,47 @@ class Config(object):
         )
 
     @staticmethod
+    def add_public_ip_option(parser):
+        parser.add_argument(
+            '--ip-type',
+            required=False,
+            choices=['5_bgp', '5_lxbgp', '5_telcom', '5_union'],
+            help=_('IP type of EIP to be assigned, (Your zone may only support '
+                   'part of the ip type list)'),
+        )
+        parser.add_argument(
+            '--bandwidth-size',
+            required=False,
+            metavar='<size(Mbit/s)>',
+            type=parsetypes.int_range_type(1, 301),
+            help=_('Bandwidth size, available size range is 1-300 Mbit/s'),
+        )
+        parser.add_argument(
+            '--bandwidth-share-type',
+            required=False,
+            choices=['PER'],
+            help=_('Bandwidth share type, '
+                   'PER is the only&default option for now.'),
+        )
+        parser.add_argument(
+            '--bandwidth-charging-mode',
+            required=False,
+            choices=['bandwidth', 'traffic'],
+            help=_('Bandwidth charging mode (Your zone may only support part '
+                   'of the charging mode list)'),
+        )
+
+    @staticmethod
+    def add_user_data_option(parser):
+        parser.add_argument(
+            '--userdata',
+            required=False,
+            type=parsetypes.blob_or_filepath,
+            help=_('User data to be cloud initialed (support when cloud-init '
+                   'is enabled)'),
+        )
+
+    @staticmethod
     def add_metadata_opt(parser):
         parser.add_argument(
             '--metadata',
@@ -330,7 +370,6 @@ class Config(object):
 
 
 class Instance(object):
-
     @staticmethod
     def add_group_opt(parser):
         parser.add_argument(
@@ -379,7 +418,6 @@ class Instance(object):
 
 
 class Log(object):
-
     @staticmethod
     def add_start_time_option(parser):
         parser.add_argument(
@@ -400,7 +438,6 @@ class Log(object):
 
 
 class Policy(object):
-
     @staticmethod
     def add_policy_id_arg(parser, op):
         parser.add_argument(
@@ -469,23 +506,23 @@ class Policy(object):
                    "with format HH:mm"),
         )
 
-    @staticmethod
-    def add_recurrence_opt(parser, required=False):
-        parser.add_argument(
-            '--recurrence',
-            required=required,
-            metavar="<type:value>",
-            type=parsetypes.recurrence_type,
-            help=_("Recurrence type contains ['Daily', 'Weekly', 'Monthly']. "
-                   "When type is Daily, value should be HH:ss "
-                   "(example: Daily:18:00 means schedule at Everyday's 18:00);"
-                   " When type is Weekly, value should be 1-7 (example: "
-                   "Weekly:1,3 means schedule at Every Sunday,Wednesday); "
-                   "When type is Monthly, value should be 1-31 (example: "
-                   "Monthly:1,10,20 means schedule at 1,10,20 of Every Month),"
-                   " (Effect only when policy-type is RECURRENCE)"
-                   ),
-        )
+    # @staticmethod
+    # def add_recurrence_opt(parser, required=False):
+    #     parser.add_argument(
+    #         '--recurrence',
+    #         required=required,
+    #         metavar="<type:value>",
+    #         type=parsetypes.recurrence_type,
+    #         help=_("Recurrence type contains ['Daily', 'Weekly', 'Monthly']. "
+    #                "When type is Daily, value should be HH:ss "
+    #                "(example: Daily:18:00 means schedule at Everyday's 18:00);"
+    #                " When type is Weekly, value should be 1-7 (example: "
+    #                "Weekly:1,3 means schedule at Every Sunday,Wednesday); "
+    #                "When type is Monthly, value should be 1-31 (example: "
+    #                "Monthly:1,10,20 means schedule at 1,10,20 of Every Month),"
+    #                " (Effect only when policy-type is RECURRENCE)"
+    #                ),
+    #     )
 
     @staticmethod
     def add_recurrence_type_opt(parser, required=False):

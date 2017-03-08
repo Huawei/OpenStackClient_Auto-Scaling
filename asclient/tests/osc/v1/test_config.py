@@ -208,13 +208,23 @@ class TestCreateAutoScalingConfig(AutoScalingConfigV1BaseTestCase):
             "--file", "/etc/data2=/etc/data2",
             "--metadata", "k1=v1",
             "--metadata", "k2=v2",
+            "--ip-type", "5_telcom",
+            "--bandwidth-size", "5",
+            "--bandwidth-share-type", "PER",
+            "--bandwidth-charging-mode", "traffic",
+            "--userdata", "userdata",
         ]
         verify_args = [
             ("name", "new-config-name"),
             ("instance_id", "instance-1"),
             ("key_name", "keypair1"),
             ("metadata", dict(k1='v1', k2='v2')),
-            ("file", ['/etc/data1=/etc/data1', '/etc/data2=/etc/data2', ])
+            ("file", ['/etc/data1=/etc/data1', '/etc/data2=/etc/data2', ]),
+            ("ip_type", "5_telcom"),
+            ("bandwidth_size", 5),
+            ("bandwidth_share_type", "PER"),
+            ("bandwidth_charging_mode", "traffic"),
+            ("userdata", "userdata"),
         ]
         args = self.check_parser(self.cmd, args, verify_args)
         mock_io_open.side_effect = ["content-1", "content-2"]
@@ -231,6 +241,17 @@ class TestCreateAutoScalingConfig(AutoScalingConfigV1BaseTestCase):
                     {'content': 'Y29udGVudC0x', 'path': '/etc/data1'},
                     {'content': 'Y29udGVudC0y', 'path': '/etc/data2'},
                 ],
+                'public_ip': {
+                    'eip': {
+                        'ip_type': '5_telcom',
+                        'bandwidth': {
+                            'bandwidth_charging_mode': 'traffic',
+                            'bandwidth_share_type': 'traffic',
+                            'bandwidth_size': 5
+                        }
+                    }
+                },
+                "user_data": "dXNlcmRhdGE=",
             }
         }
         mock_create.assert_called_once_with("/scaling_configuration",

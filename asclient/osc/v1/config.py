@@ -42,6 +42,8 @@ class CreateAutoScalingConfig(command.Command):
         pb.Config.add_authentication_opt(parser)
 
         pb.Config.add_file_opt(parser)
+        pb.Config.add_public_ip_option(parser)
+        pb.Config.add_user_data_option(parser)
         pb.Config.add_metadata_opt(parser)
 
         return parser
@@ -87,6 +89,11 @@ class CreateAutoScalingConfig(command.Command):
             "metadata": args.metadata,
             "key_name": args.key_name,
             "admin_pwd": args.admin_pass,
+            "ip_type": args.ip_type,
+            "bandwidth_size": args.bandwidth_size,
+            "bandwidth_share_type": args.bandwidth_charging_mode,
+            "bandwidth_charging_mode": args.bandwidth_charging_mode,
+            "user_data": args.userdata,
         }
 
         config = mgr.create(args.name, **kwargs)

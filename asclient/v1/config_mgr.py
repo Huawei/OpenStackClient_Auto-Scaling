@@ -94,7 +94,9 @@ class ConfigManager(manager.Manager):
 
     def create(self, name, instance_id=None, flavor_id=None, image_id=None,
                disk=None, key_name=None, admin_pwd=None, files=None,
-               metadata=None):
+               metadata=None, ip_type=None, bandwidth_size=None,
+               bandwidth_share_type=None, bandwidth_charging_mode=None,
+               user_data=None):
         """create a new auto scaling instance configuration
 
         :param name: Something to name the configuration.
@@ -115,6 +117,11 @@ class ConfigManager(manager.Manager):
                       and each file must be 10k or less.
         :param metadata: A dict of arbitrary key/value metadata to store for
                 instance. Both keys and values must be <=255 characters.
+        :param ip_type:
+        :param bandwidth_size:
+        :param bandwidth_share_type:
+        :param bandwidth_charging_mode:
+        :param user_data:
         :return:
         """
         personality = []
@@ -134,6 +141,21 @@ class ConfigManager(manager.Manager):
                     'content': content,
                 })
 
+        bandwidth = utils.remove_empty_from_dict({
+            "bandwidth_size": bandwidth_size,
+            "bandwidth_share_type": bandwidth_share_type,
+            "bandwidth_charging_mode": bandwidth_charging_mode,
+        })
+        eip = utils.remove_empty_from_dict({
+            "ip_type": ip_type,
+            "bandwidth": bandwidth,
+        })
+        public_ip = utils.remove_empty_from_dict({"eip": eip})
+
+        if user_data:
+            utf_user_data = user_data.encode('utf-8')
+            user_data = base64.b64encode(utf_user_data).decode('utf-8')
+
         config = utils.remove_empty_from_dict({
             "instance_id": instance_id,
             "flavorRef": flavor_id,
@@ -143,6 +165,8 @@ class ConfigManager(manager.Manager):
             "adminPass": admin_pwd,
             "metadata": metadata,
             "personality": personality,
+            "public_ip": public_ip,
+            "user_data": user_data,
         })
 
         json = {
