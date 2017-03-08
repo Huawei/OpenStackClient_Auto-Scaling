@@ -91,7 +91,7 @@ class CreateAutoScalingConfig(command.Command):
             "admin_pwd": args.admin_pass,
             "ip_type": args.ip_type,
             "bandwidth_size": args.bandwidth_size,
-            "bandwidth_share_type": args.bandwidth_charging_mode,
+            "bandwidth_share_type": args.bandwidth_share_type,
             "bandwidth_charging_mode": args.bandwidth_charging_mode,
             "user_data": args.userdata,
         }
