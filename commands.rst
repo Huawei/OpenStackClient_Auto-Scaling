@@ -183,7 +183,7 @@ Policy Commands
 
 #. policy list(查询弹性伸缩策略列表)::
 
-    $ openstack as policy list --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
+        $ openstack as policy list --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385
     +--------------------------------------+----------------+-------------+-------------+----------------+-----------+
     | Policy ID                            | Policy Name    | Policy Type | CoolDown(s) | Trigger Action | Status    |
     +--------------------------------------+----------------+-------------+-------------+----------------+-----------+
