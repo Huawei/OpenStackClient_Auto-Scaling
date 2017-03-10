@@ -180,7 +180,7 @@ Policy Commands
 
     $ openstack as policy edit  e0eb7de0-aa5b-435c-8d4c-46867fdf087d  --action=SET:2
         --cool-down=60 --name=WooTest2 --type=RECURRENCE --recurrence=Weekly:1,3,5
-        --start-time=2017-02-20T00:00 --end-time=2017-03-20T00:00 --debug
+        --start-time=2017-02-20T00:00 --end-time=2017-03-20T00:00 
     done
 
 
@@ -246,17 +246,18 @@ Log Commands
 
     $ openstack as log list --group=ac8acbb4-e6ce-4890-a9f2-d8712b3d7385 --start-time=2016-11-28T17:45:10
         --end-time=2017-01-01T00:00:00 --limit=2 --offset=1
-    +----------------------+----------------------+------------------------+-----------------------------------------------+---------+
-    | Start Time           | End Time             | Current/Desire/Scaling | Scaling Reason                                | Status  |
-    +----------------------+----------------------+------------------------+-----------------------------------------------+---------+
-    | 2016-11-30T14:17:52Z | 2016-11-30T14:19:41Z | 2/1/1                  | change_reason='MANNUAL_DELETE',               | SUCCESS |
-    |                      |                      |                        | change_time='2016-11-30T14:17:52Z',           |         |
-    |                      |                      |                        | new_value='1', old_value='2'                  |         |
-    | 2016-11-29T17:45:10Z | 2016-11-29T17:46:31Z | 3/2/1                  | change_reason='SCHEDULED',                    | SUCCESS |
-    |                      |                      |                        | change_time='2016-11-29T17:45:00Z',           |         |
-    |                      |                      |                        | new_value='2', old_value='3'                  |         |
-    +----------------------+----------------------+------------------------+-----------------------------------------------+---------+
-
+    +--------------------------+------------------------+-------------------------------+--------------------------------+---------+
+    | Scaling Time(Start->End) | Current/Desire/Scaling | Scaling Reason                | Modified Instances             | Status  |
+    +--------------------------+------------------------+-------------------------------+--------------------------------+---------+
+    | 2016-11-30T14:17:52Z     | 2/1/1                  | change_reason='MANNUAL_DELETE | deleted:as-config-TEO_Z2K1NVK2 | SUCCESS |
+    | 2016-11-30T14:19:41Z     |                        | ', change_time='2016-11-30T14 |                                |         |
+    |                          |                        | :17:52Z', new_value='1',      |                                |         |
+    |                          |                        | old_value='2'                 |                                |         |
+    | 2016-11-29T17:45:10Z     | 3/2/1                  | change_reason='SCHEDULED', ch | deleted:as-config-TEO_5JMD4T75 | SUCCESS |
+    | 2016-11-29T17:46:31Z     |                        | ange_time='2016-11-29T17:45:0 |                                |         |
+    |                          |                        | 0Z', new_value='2',           |                                |         |
+    |                          |                        | old_value='3'                 |                                |         |
+    +--------------------------+------------------------+-------------------------------+--------------------------------+---------+
 
 Quota Commands
 ==============
