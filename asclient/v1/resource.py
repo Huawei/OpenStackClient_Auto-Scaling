@@ -197,15 +197,16 @@ class AutoScalingLog(resource.Resource, display.Display):
     """AutoScaling activity log resource instance"""
 
     list_column_names = [
-        "Start Time",
-        "End Time",
+        "Scaling Time(Start->End)",
         "Current/Desire/Scaling",
         "Scaling Reason",
+        "Modified Instances",
         "Status",
     ]
 
     column_2_property = {
         "Current/Desire/Scaling": "instance_number",
+        "Scaling Time(Start->End)": "scaling_time",
     }
 
     @property
@@ -213,6 +214,27 @@ class AutoScalingLog(resource.Resource, display.Display):
         return "%d/%d/%d" % (self.instance_value,
                              self.desire_value,
                              self.scaling_value,)
+
+    @property
+    def scaling_time(self):
+        return self.start_time + '\n' + self.end_time
+
+    @property
+    def modified_instances(self):
+        output = ""
+        if self.instance_added_list:
+            output += "added:"
+            output += self.instance_added_list
+
+        if self.instance_removed_list:
+            output += "\nremoved:"
+            output += self.instance_removed_list
+
+        if self.instance_deleted_list:
+            output += "\ndeleted:"
+            output += self.instance_deleted_list
+
+        return output
 
     @property
     def scaling_reason(self):

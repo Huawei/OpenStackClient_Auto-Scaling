@@ -37,8 +37,8 @@ class TestListAutoScalingLog(base.AutoScalingV1BaseTestCase):
             "start_time": "2017-02-19T13:52:32Z",
             "end_time": "2017-02-19T14:03:31Z",
             "instance_added_list": "as-config-TEO_XQF2JJSI",
-            "instance_deleted_list": None,
-            "instance_removed_list": ""
+            "instance_deleted_list": "as-config-deleted",
+            "instance_removed_list": "as-config-removed"
         }, {
             "id": "b292c0bb-2769-449e-aa23-00099d0ce3cc",
             "status": "SUCCESS",
@@ -97,18 +97,19 @@ class TestListAutoScalingLog(base.AutoScalingV1BaseTestCase):
                               columns)
 
             expected = [(
-                '2017-02-19T13:52:32Z',
-                '2017-02-19T14:03:31Z',
+                '2017-02-19T13:52:32Z\n2017-02-19T14:03:31Z',
                 '2/3/1',
                 "change_reason='SCHEDULED', change_time='2017-02-19T13:41:04Z'"
                 ", new_value='3', old_value='2'",
+                'added:as-config-TEO_XQF2JJSI\nremoved:as-config-removed'
+                '\ndeleted:as-config-deleted',
                 'SUCCESS'
             ), (
-                '2017-02-19T13:40:12Z',
-                '2017-02-19T13:52:21Z',
+                '2017-02-19T13:40:12Z\n2017-02-19T13:52:21Z',
                 '1/2/1',
                 "change_reason='SCHEDULED', change_time='2017-02-19T13:40:00Z'"
                 ", new_value='2', old_value='1'",
+                'added:as-config-TEO_LV1JS5P3',
                 'SUCCESS'
             )]
             self.assertEquals(expected, data)
