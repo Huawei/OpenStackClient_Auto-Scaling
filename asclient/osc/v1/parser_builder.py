@@ -346,7 +346,7 @@ class Config(object):
             '--bandwidth-size',
             required=False,
             metavar='<size(Mbit/s)>',
-            type=parsetypes.int_range_type(1, 301),
+            type=parsetypes.int_range_type(1, 300),
             help=_('Bandwidth size, available size range is 1-300 Mbit/s'),
         )
         parser.add_argument(
