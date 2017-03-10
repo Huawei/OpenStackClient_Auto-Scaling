@@ -221,20 +221,17 @@ class AutoScalingLog(resource.Resource, display.Display):
 
     @property
     def modified_instances(self):
-        output = ""
+        actions = []
         if self.instance_added_list:
-            output += "added:"
-            output += self.instance_added_list
+            actions.append("added:" + self.instance_added_list)
 
         if self.instance_removed_list:
-            output += "\nremoved:"
-            output += self.instance_removed_list
+            actions.append("removed:" + self.instance_removed_list)
 
         if self.instance_deleted_list:
-            output += "\ndeleted:"
-            output += self.instance_deleted_list
+            actions.append("deleted:" + self.instance_deleted_list)
 
-        return output
+        return '\n'.join(actions)
 
     @property
     def scaling_reason(self):
