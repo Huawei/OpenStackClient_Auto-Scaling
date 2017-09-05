@@ -40,9 +40,7 @@ class TestWorkspacePlugin(base.BaseTestCase):
 
         client.assert_called_once_with(
             instance.session,
-            "http://auto-scaling.endpoint",
-            region_name=fakes.REGION_NAME,
-            interface=fakes.INTERFACE,
+            "http://auto-scaling.endpoint"
         )
 
     def test_plugin_parser(self):

@@ -180,7 +180,7 @@ class Group(object):
             action="append",
             default=[],
             dest="available_zones",
-            choices=["eu-de-01", "eu-de-02", "cn-north-1"],
+            # choices=["eu-de-01", "eu-de-02", "cn-north-1"],
             help=_("When new auto scaling instance is created, it will create "
                    "instance in available zones. If not specified, zone of "
                    "network will be used. If network is not specified too, "
